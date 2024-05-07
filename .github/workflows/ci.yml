@@ -1,0 +1,72 @@
+name: Flutter CI
+
+on:
+  pull_request:
+    types: ['opened', 'synchronize']
+  push:
+    branches:
+      - main
+
+jobs:
+  lint_and_build:
+    name: Lint and Build
+    runs-on: ubuntu-latest
+    env:
+      FLUTTER_VERSION: 3.19.6
+      FLUTTER_CHANNEL: stable
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Dart
+        uses: dart-lang/setup-dart@v1
+        with:
+          sdk: stable
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: ${{ env.FLUTTER_CHANNEL }}
+          cache: true
+          cache-key: flutter
+          cache-path: ${{ runner.tool_cache }}/flutter
+
+      - name: Display Flutter version
+        run: flutter --version
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Analyze project source
+        run: dart analyze
+
+      - name: Build APK
+        run: flutter build apk
+
+      - name: Build App Bundle
+        run: flutter build appbundle
+
+  build_ios:
+    name: Build iOS
+    runs-on: macos-latest
+    env:
+      FLUTTER_VERSION: 3.19.6
+      FLUTTER_CHANNEL: stable
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: ${{ env.FLUTTER_CHANNEL }}
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build iOS
+        run: flutter build ios --release --no-codesign
