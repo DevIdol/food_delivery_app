@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../constants/constants.dart';
+import '../utils/constants/constants.dart';
 import '../routes/routes.dart';
 
 class MyApp extends StatelessWidget {

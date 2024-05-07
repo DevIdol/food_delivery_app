@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import '../constants/constants.dart';
+import '../utils/constants/constants.dart';
 import '../screens/screens.dart';
 
 final pages = [
