@@ -1,24 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
-import '../../constants/constants.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import '../../providers/providers.dart';
+import '../../utils/utils.dart';
 import '../../widgets/widgets.dart';
-import '../home/home.dart';
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends StatefulHookConsumerWidget {
   const LoginScreen({super.key});
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends ConsumerState<LoginScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey();
 
   final FocusNode _focusNodePassword = FocusNode();
   bool _obscurePassword = true;
 
-  final TextEditingController _controllerUsername = TextEditingController();
+  final TextEditingController _controllerEmail = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
+
+  @override
+  void initState() {
+    _controllerEmail.text = "devidol.mm@gmail.com";
+    _controllerPassword.text = "Thang@123";
+    super.initState();
+  }
+
+  void showSnackbar(BuildContext context, String text) {
+    final snackBar = SnackBar(
+      content: Text(text),
+      duration: const Duration(seconds: 5),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,14 +47,17 @@ class _LoginScreenState extends State<LoginScreen> {
               color: AppColor.cardColor,
               width: MediaQuery.of(context).size.width * 0.9,
               child: Padding(
-                padding: const EdgeInsets.only(left: 20, right: 20,),
+                padding: const EdgeInsets.only(
+                  left: 20,
+                  right: 20,
+                ),
                 child: FormWidget(
                   formKey: _formKey,
                   children: [
                     headerTitle(context: context, title: 'Login'),
                     const Gap(20),
                     TextFormFieldWidget(
-                      controller: _controllerUsername,
+                      controller: _controllerEmail,
                       txtInputType: TextInputType.emailAddress,
                       labelText: "Email",
                       prefixIcon: Icons.mail,
@@ -89,21 +108,29 @@ class _LoginScreenState extends State<LoginScreen> {
                     ButtonWidget(
                         onPressed: () {
                           if (_formKey.currentState?.validate() ?? false) {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) {
-                                  return const HomeScreen();
-                                },
-                              ),
-                            );
+                            ref
+                                .read(userNotifierProvider.notifier)
+                                .login(
+                                  email: _controllerEmail.text,
+                                  password: _controllerPassword.text,
+                                )
+                                .then(
+                                  (res) => {
+                                    res.fold(
+                                      (l) => {
+                                        showSnackbar(context, l),
+                                      },
+                                      (r) => {Get.offAllNamed(AppRoute.home)},
+                                    ),
+                                  },
+                                );
                           }
                         },
                         btnText: 'Login'),
                     const Gap(10),
                     TextButton(
                       onPressed: () {
-                         Get.toNamed(AppRoute.signup);
+                        Get.toNamed(AppRoute.signup);
                       },
                       child: const Text(
                         "Don't have an account? Sign Up",
@@ -123,7 +150,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void dispose() {
     _focusNodePassword.dispose();
-    _controllerUsername.dispose();
+    _controllerEmail.dispose();
     _controllerPassword.dispose();
     super.dispose();
   }
