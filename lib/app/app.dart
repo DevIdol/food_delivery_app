@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import '../providers/providers.dart';
+import '../screens/screens.dart';
 import '../utils/constants/constants.dart';
 import '../routes/routes.dart';
 
-class MyApp extends StatelessWidget {
+class MyApp extends HookConsumerWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    bool isLogin = true | false;
-    String initialRoute = isLogin ? AppRoute.login : AppRoute.home;
-
+  Widget build(BuildContext context, WidgetRef ref) {
     return GetMaterialApp(
       title: 'Food App',
       theme: ThemeData(
@@ -18,8 +18,23 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-      initialRoute: initialRoute,
       getPages: pages,
+      home: ref
+          .watch(
+            getIsAuthenticatedProvider,
+          )
+          .when(
+            data: (bool isAuthenticated) =>
+                isAuthenticated ? const HomeScreen() : const LoginScreen(),
+            loading: () {
+              return const Scaffold(
+                body: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              );
+            },
+            error: (error, stacktrace) => const LoginScreen(),
+          ),
     );
   }
 }

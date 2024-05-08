@@ -18,7 +18,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final FocusNode _focusNodePassword = FocusNode();
   bool _obscurePassword = true;
 
-  final TextEditingController _controllerUsername = TextEditingController();
+  final TextEditingController _controllerFirstName = TextEditingController();
+  final TextEditingController _controllerLastName = TextEditingController();
+  final TextEditingController _controllerPhone = TextEditingController();
+  final TextEditingController _controllerEmail = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
 
   @override
@@ -42,7 +45,39 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     headerTitle(context: context, title: 'Sign Up'),
                     const Gap(20),
                     TextFormFieldWidget(
-                      controller: _controllerUsername,
+                      controller: _controllerFirstName,
+                      txtInputType: TextInputType.text,
+                      labelText: "First Name",
+                      prefixIcon: Icons.person,
+                      obscureText: false,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Please enter your first name.";
+                        }
+                        return null;
+                      },
+                      onEditingComplete: () =>
+                          _focusNodePassword.requestFocus(),
+                    ),
+                    const Gap(20),
+                    TextFormFieldWidget(
+                      controller: _controllerLastName,
+                      txtInputType: TextInputType.text,
+                      labelText: "Last Name",
+                      prefixIcon: Icons.person,
+                      obscureText: false,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Please enter your last name.";
+                        }
+                        return null;
+                      },
+                      onEditingComplete: () =>
+                          _focusNodePassword.requestFocus(),
+                    ),
+                    const Gap(20),
+                    TextFormFieldWidget(
+                      controller: _controllerPhone,
                       txtInputType: TextInputType.phone,
                       labelText: "Phone",
                       prefixIcon: Icons.phone,
@@ -58,14 +93,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                     const Gap(20),
                     TextFormFieldWidget(
-                      controller: _controllerUsername,
+                      controller: _controllerEmail,
                       txtInputType: TextInputType.emailAddress,
-                      labelText: "Email",
+                      labelText: "Mail",
                       prefixIcon: Icons.mail,
                       obscureText: false,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return "Please enter mail.";
+                          return "Please enter your email number.";
                         }
                         return null;
                       },
@@ -134,7 +169,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   void dispose() {
     _focusNodePassword.dispose();
-    _controllerUsername.dispose();
+    _controllerFirstName.dispose();
+    _controllerLastName.dispose();
+    _controllerPhone.dispose();
+    _controllerEmail.dispose();
     _controllerPassword.dispose();
     super.dispose();
   }

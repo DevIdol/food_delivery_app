@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:dio/dio.dart';
 import 'package:riverpod/riverpod.dart';
 import '../../entities/entities.dart';
@@ -12,7 +14,7 @@ class UserRepositoryImpl implements UserRepository {
   UserRepositoryImpl() {
     _dio = Dio(
       BaseOptions(
-        baseUrl: 'http://localhost:8000/api/v1/',
+        baseUrl: 'http://172.20.30.52:8000/api/v1/user',
         responseType: ResponseType.json,
       ),
     );
@@ -22,7 +24,7 @@ class UserRepositoryImpl implements UserRepository {
   Future<UserResponse> login(UserRequest req) async {
     try {
       final response = await _dio.post(
-        'user/login',
+        '/login',
         data: req.toJson(),
       );
       return UserResponse.fromJson(response.data);
