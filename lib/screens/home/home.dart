@@ -26,11 +26,10 @@ class HomeScreen extends HookConsumerWidget {
               iconSize: 30,
               icon: const Icon(Icons.logout),
               onPressed: () async {
-                final isLogout =
-                    await ref.read(userNotifierProvider.notifier).logout();
-                if (isLogout) {
-                  Get.offAllNamed(AppRoute.login);
-                }
+                ref
+                    .read(userNotifierProvider.notifier)
+                    .logout()
+                    .then((value) => Get.offAllNamed(AppRoute.login));
               },
             ),
           ],

@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:food_app/providers/providers.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+
 import '../../utils/utils.dart';
 import '../../widgets/widgets.dart';
-import '../home/home.dart';
 
-class SignUpScreen extends StatefulWidget {
+class SignUpScreen extends StatefulHookConsumerWidget {
   const SignUpScreen({super.key});
 
   @override
-  State<SignUpScreen> createState() => _SignUpScreenState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _SignUpScreenState();
 }
 
-class _SignUpScreenState extends State<SignUpScreen> {
+class _SignUpScreenState extends ConsumerState<SignUpScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey();
 
-  final FocusNode _focusNodePassword = FocusNode();
+  final FocusNode _focusNode = FocusNode();
   bool _obscurePassword = true;
 
   final TextEditingController _controllerFirstName = TextEditingController();
@@ -23,6 +25,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _controllerPhone = TextEditingController();
   final TextEditingController _controllerEmail = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
+
+  void showSnackbar(BuildContext context, String text) {
+    final snackBar = SnackBar(
+      content: Text(text),
+      duration: const Duration(seconds: 5),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,8 +66,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         }
                         return null;
                       },
-                      onEditingComplete: () =>
-                          _focusNodePassword.requestFocus(),
+                      onEditingComplete: () => _focusNode.requestFocus(),
                     ),
                     const Gap(20),
                     TextFormFieldWidget(
@@ -72,8 +81,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         }
                         return null;
                       },
-                      onEditingComplete: () =>
-                          _focusNodePassword.requestFocus(),
+                      onEditingComplete: () => _focusNode.requestFocus(),
                     ),
                     const Gap(20),
                     TextFormFieldWidget(
@@ -88,8 +96,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         }
                         return null;
                       },
-                      onEditingComplete: () =>
-                          _focusNodePassword.requestFocus(),
+                      onEditingComplete: () => _focusNode.requestFocus(),
                     ),
                     const Gap(20),
                     TextFormFieldWidget(
@@ -104,8 +111,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         }
                         return null;
                       },
-                      onEditingComplete: () =>
-                          _focusNodePassword.requestFocus(),
+                      onEditingComplete: () => _focusNode.requestFocus(),
                     ),
                     const Gap(20),
                     TextFormFieldWidget(
@@ -113,7 +119,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       labelText: "Password",
                       prefixIcon: Icons.lock,
                       obscureText: _obscurePassword,
-                      focusNode: _focusNodePassword,
+                      focusNode: _focusNode,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return "Please enter password.";
@@ -135,14 +141,25 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ButtonWidget(
                         onPressed: () {
                           if (_formKey.currentState?.validate() ?? false) {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) {
-                                  return const HomeScreen();
-                                },
-                              ),
-                            );
+                            ref
+                                .read(userNotifierProvider.notifier)
+                                .signup(
+                                    firstName: _controllerFirstName.text,
+                                    lastName: _controllerLastName.text,
+                                    email: _controllerEmail.text,
+                                    phone: _controllerPhone.text,
+                                    password: _controllerPassword.text,
+                                    address: 'Yangon')
+                                .then(
+                                  (res) => {
+                                    res.fold(
+                                      (l) => {
+                                        showSnackbar(context, l),
+                                      },
+                                      (r) => {Get.toNamed(AppRoute.verifyOTP)},
+                                    ),
+                                  },
+                                );
                           }
                         },
                         btnText: 'Sign Up'),
@@ -168,12 +185,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   void dispose() {
-    _focusNodePassword.dispose();
-    _controllerFirstName.dispose();
-    _controllerLastName.dispose();
-    _controllerPhone.dispose();
-    _controllerEmail.dispose();
-    _controllerPassword.dispose();
+    _focusNode.dispose();
     super.dispose();
   }
 }

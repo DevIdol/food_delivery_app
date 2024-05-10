@@ -1,3 +1,4 @@
+import 'package:food_app/screens/otp/verify_otp.dart';
 import 'package:get/get.dart';
 import '../utils/constants/constants.dart';
 import '../screens/screens.dart';
@@ -14,5 +15,9 @@ final pages = [
   GetPage(
     name: AppRoute.login,
     page: () => const LoginScreen(),
+  ),
+    GetPage(
+    name: AppRoute.verifyOTP,
+    page: () => const VerifyOTPScreen(),
   ),
 ];
