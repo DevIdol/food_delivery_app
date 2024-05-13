@@ -19,6 +19,7 @@ class MyApp extends HookConsumerWidget {
       ),
       debugShowCheckedModeBanner: false,
       getPages: pages,
+      
       home: ref
           .watch(
             getIsAuthenticatedProvider,

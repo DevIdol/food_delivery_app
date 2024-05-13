@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:food_app/providers/auth/auth_provider.dart';
-import 'package:food_app/providers/user/user_provider.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import '../../providers/providers.dart';
 import '../../utils/utils.dart';
 import '../../widgets/widgets.dart';
 
@@ -31,7 +30,8 @@ class _VerifyOTPScreenState extends ConsumerState<VerifyOTPScreen> {
   @override
   Widget build(BuildContext context) {
     final String token = ref.watch(setJWTTokenStateProvider) as String;
-    return Scaffold(
+    return LoadingOverlay(
+        child: Scaffold(
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(20),
@@ -65,9 +65,12 @@ class _VerifyOTPScreenState extends ConsumerState<VerifyOTPScreen> {
                     ),
                     const Gap(20),
                     ButtonWidget(
-                        onPressed: () {
+                        onPressed: () async {
                           if (_formKey.currentState?.validate() ?? false) {
                             ref
+                                .watch(loadingProvider.notifier)
+                                .update((state) => true);
+                            await ref
                                 .read(userNotifierProvider.notifier)
                                 .veriyOTP(
                                   otp: _controllerOTP.text,
@@ -76,22 +79,32 @@ class _VerifyOTPScreenState extends ConsumerState<VerifyOTPScreen> {
                                 .then(
                                   (res) => {
                                     res.fold(
-                                      (l) => {
+                                      (l) async => {
                                         showSnackbar(context, l),
                                       },
-                                      (r) => {
-                                        ref
+                                      (r) async => {
+                                        await ref
                                             .read(userNotifierProvider.notifier)
                                             .login(
                                                 email: r.email,
                                                 password: r.password)
                                             .then(
-                                              (res) => {
+                                              (res) async => {
                                                 res.fold(
-                                                  (l) => {
+                                                  (l) async => {
+                                                    ref
+                                                        .watch(loadingProvider
+                                                            .notifier)
+                                                        .update(
+                                                            (state) => false),
                                                     showSnackbar(context, l),
                                                   },
-                                                  (r) => {
+                                                  (r) async => {
+                                                    ref
+                                                        .watch(loadingProvider
+                                                            .notifier)
+                                                        .update(
+                                                            (state) => false),
                                                     Get.offAllNamed(
                                                         AppRoute.home),
                                                   },
@@ -122,6 +135,6 @@ class _VerifyOTPScreenState extends ConsumerState<VerifyOTPScreen> {
           ),
         ),
       ),
-    );
+    ));
   }
 }
