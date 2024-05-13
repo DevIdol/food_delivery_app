@@ -15,18 +15,11 @@ class LoginScreen extends StatefulHookConsumerWidget {
 class _LoginScreenState extends ConsumerState<LoginScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey();
 
-  final FocusNode _focusNodePassword = FocusNode();
+  final FocusNode _focusNode = FocusNode();
   bool _obscurePassword = true;
 
   final TextEditingController _controllerEmail = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
-
-  @override
-  void initState() {
-    _controllerEmail.text = "devidol.mm@gmail.com";
-    _controllerPassword.text = "Thang@123";
-    super.initState();
-  }
 
   void showSnackbar(BuildContext context, String text) {
     final snackBar = SnackBar(
@@ -69,7 +62,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         return null;
                       },
                       onEditingComplete: () =>
-                          _focusNodePassword.requestFocus(),
+                          _focusNode.requestFocus(),
                     ),
                     const Gap(20),
                     TextFormFieldWidget(
@@ -77,7 +70,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       labelText: "Password",
                       prefixIcon: Icons.lock,
                       obscureText: _obscurePassword,
-                      focusNode: _focusNodePassword,
+                      focusNode: _focusNode,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return "Please enter password.";
@@ -149,9 +142,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   @override
   void dispose() {
-    _focusNodePassword.dispose();
-    _controllerEmail.dispose();
-    _controllerPassword.dispose();
+    _focusNode.dispose();
     super.dispose();
   }
 }

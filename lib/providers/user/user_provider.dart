@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:food_app/entities/otp/otp_request.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../entities/entities.dart';
 import '../../repositories/repositories.dart';
@@ -11,26 +12,92 @@ class UserProvider extends StateNotifier<AsyncValue<dynamic>> {
     required this.ref,
   }) : super(const AsyncData(null));
 
-// Login
+//login
   Future<Either<String, bool>> login(
       {required String email, required String password}) async {
     state = const AsyncLoading();
 
     UserRequest userReq = UserRequest(email: email, password: password);
-    final response = await ref.read(userRepositoryProvider).login(userReq);
-    if (response is ErrorModel) {
-      return const Left('Unexpected response from server');
-    } else {
+    try {
+      final response = await ref.read(userRepositoryProvider).login(userReq);
       ref.read(setAuthStateProvider.notifier).state = response;
       ref.read(setIsAuthenticatedProvider(true));
       ref.read(setAuthenticatedUserProvider(response.user));
       return const Right(true);
+    } on ErrorModel catch (error) {
+      return Left(error.message);
+    } catch (e) {
+      return const Left('Failed to login');
     }
   }
 
+  // Register
+  Future<Either<String, bool>> signup(
+      {required String firstName,
+      required String lastName,
+      required String email,
+      required String phone,
+      required String password,
+      required String address}) async {
+    state = const AsyncLoading();
+
+    UserRegisterRequest userReq = UserRegisterRequest(
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        phone: phone,
+        password: password,
+        address: address);
+
+    try {
+      final response = await ref.read(userRepositoryProvider).signup(userReq);
+      ref.read(setUserRegisterStateProvider.notifier).state = userReq;
+      ref.read(setJWTTokenStateProvider.notifier).state = response.jwt;
+      return const Right(true);
+    } on ErrorModel catch (error) {
+      return Left(error.message);
+    } catch (e) {
+      return const Left('Failed to signup!!');
+    }
+  }
+
+  // Verify OTP
+  Future<Either<String, UserRegisterRequest>> veriyOTP({otp, token}) async {
+    state = const AsyncLoading();
+    OTPRequest otpReq = OTPRequest(otp: int.parse(otp), token: token);
+    try {
+      await ref.read(userRepositoryProvider).verifyOTP(otpReq);
+      UserRegisterRequest registerInfo =
+          ref.watch(setUserRegisterStateProvider) as UserRegisterRequest;
+      ref.read(resetStorage);
+      return Right(registerInfo);
+    } on ErrorModel catch (error) {
+      return Left(error.message);
+    } catch (error) {
+      return const Left('Failed to verify otp');
+    }
+  }
+
+  // // logout
+  // Future<dynamic> logout() async {
+  //   return await ref.read(resetStorage);
+  // }
+
   // logout
   Future<dynamic> logout() async {
-    return await ref.read(resetStorage);
+    try {
+      await ref.read(resetStorage);
+
+      ref.read(setAuthStateProvider.notifier).state = null;
+
+      ref.read(setUserRegisterStateProvider.notifier).state = null;
+
+      ref.read(setJWTTokenStateProvider.notifier).state = null;
+
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 }
 
