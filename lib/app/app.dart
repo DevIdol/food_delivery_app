@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import '../providers/providers.dart';
 import '../screens/screens.dart';
 import '../utils/constants/constants.dart';
@@ -11,6 +12,19 @@ class MyApp extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final jwtTokenFuture = ref.watch(getJWTTokenProvider.future);
+    final isAuthenticatedAsync = ref.watch(getIsAuthenticatedProvider);
+
+    useEffect(() {
+      Future.microtask(() async {
+        final token = await jwtTokenFuture;
+        if (token.isNotEmpty) {
+          ref.read(setJWTTokenStateProvider.notifier).state = token;
+        }
+      });
+      return null;
+    }, [jwtTokenFuture]);
+
     return GetMaterialApp(
       title: 'Food App',
       theme: ThemeData(
@@ -19,23 +33,16 @@ class MyApp extends HookConsumerWidget {
       ),
       debugShowCheckedModeBanner: false,
       getPages: pages,
-      
-      home: ref
-          .watch(
-            getIsAuthenticatedProvider,
-          )
-          .when(
-            data: (bool isAuthenticated) =>
-                isAuthenticated ? const HomeScreen() : const LoginScreen(),
-            loading: () {
-              return const Scaffold(
-                body: Center(
-                  child: CircularProgressIndicator(),
-                ),
-              );
-            },
-            error: (error, stacktrace) => const LoginScreen(),
+      home: isAuthenticatedAsync.when(
+        data: (bool isAuthenticated) =>
+            isAuthenticated ? const HomeScreen() : const LoginScreen(),
+        loading: () => const Scaffold(
+          body: Center(
+            child: CircularProgressIndicator(),
           ),
+        ),
+        error: (error, stacktrace) => const LoginScreen(),
+      ),
     );
   }
 }

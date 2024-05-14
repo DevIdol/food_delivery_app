@@ -1,3 +1,4 @@
+import 'package:food_app/screens/food/food_list_screen.dart';
 import 'package:food_app/screens/otp/verify_otp.dart';
 import 'package:get/get.dart';
 import '../utils/constants/constants.dart';
@@ -16,8 +17,12 @@ final pages = [
     name: AppRoute.login,
     page: () => const LoginScreen(),
   ),
-    GetPage(
+  GetPage(
     name: AppRoute.verifyOTP,
     page: () => const VerifyOTPScreen(),
+  ),
+  GetPage(
+    name: AppRoute.food,
+    page: () => const FoodListScreen(),
   ),
 ];
