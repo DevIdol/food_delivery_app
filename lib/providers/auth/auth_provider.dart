@@ -15,7 +15,8 @@ final setAuthStateProvider = StateProvider<UserResponse?>(
 );
 
 // To store user register state
-final setUserRegisterStateProvider = StateProvider<UserRegisterRequest?>((ref) => null);
+final setUserRegisterStateProvider =
+    StateProvider<UserRegisterRequest?>((ref) => null);
 
 // To store jwt token
 final setJWTTokenStateProvider = StateProvider<String?>((ref) => null);

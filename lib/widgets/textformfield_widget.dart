@@ -41,6 +41,8 @@ class TextFormFieldWidget extends StatelessWidget {
       obscureText: obscureText,
       focusNode: focusNode,
       style: textStyle,
+      autocorrect: true,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       decoration: InputDecoration(
         labelText: labelText,
         labelStyle: textStyle,

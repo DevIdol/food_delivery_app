@@ -3,4 +3,5 @@ class AppRoute {
   static String login = '/login';
   static String signup = '/signup';
   static String verifyOTP = '/verify-otp';
+  static String food = '/food';
 }

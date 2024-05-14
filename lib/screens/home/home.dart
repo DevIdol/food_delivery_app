@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../providers/providers.dart';
 import '../../utils/utils.dart';
+import '../food/food_list_screen.dart';
 
 class HomeScreen extends HookConsumerWidget {
   const HomeScreen({super.key});
@@ -34,16 +35,7 @@ class HomeScreen extends HookConsumerWidget {
             ),
           ],
         ),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text('Email: ${userModel.email}'),
-              Text('Phone: ${userModel.phone}'),
-              Text('Address: ${userModel.address}')
-            ],
-          ),
-        ),
+        body: const FoodListScreen(),
       ),
     );
   }

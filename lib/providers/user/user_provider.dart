@@ -12,7 +12,7 @@ class UserProvider extends StateNotifier<AsyncValue<dynamic>> {
     required this.ref,
   }) : super(const AsyncData(null));
 
-//login
+  //login
   Future<Either<String, bool>> login(
       {required String email, required String password}) async {
     state = const AsyncLoading();
@@ -20,6 +20,8 @@ class UserProvider extends StateNotifier<AsyncValue<dynamic>> {
     UserRequest userReq = UserRequest(email: email, password: password);
     try {
       final response = await ref.read(userRepositoryProvider).login(userReq);
+      ref.read(setJWTTokenStateProvider.notifier).state = response.jwt;
+      ref.read(setJWTTokenProvider(response.jwt));
       ref.read(setAuthStateProvider.notifier).state = response;
       ref.read(setIsAuthenticatedProvider(true));
       ref.read(setAuthenticatedUserProvider(response.user));
@@ -77,11 +79,6 @@ class UserProvider extends StateNotifier<AsyncValue<dynamic>> {
       return const Left('Failed to verify otp');
     }
   }
-
-  // // logout
-  // Future<dynamic> logout() async {
-  //   return await ref.read(resetStorage);
-  // }
 
   // logout
   Future<dynamic> logout() async {

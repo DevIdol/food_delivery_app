@@ -79,8 +79,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         });
                       },
                       icon: _obscurePassword
-                          ? const Icon(Icons.visibility_outlined)
-                          : const Icon(Icons.visibility_off_outlined),
+                          ? const Icon(Icons.visibility_off_outlined)
+                          : const Icon(Icons.visibility_outlined),
                     ),
                   ),
                   Align(
