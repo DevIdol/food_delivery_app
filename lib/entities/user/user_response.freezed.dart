@@ -20,7 +20,7 @@ UserResponse _$UserResponseFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$UserResponse {
-  String get jwt => throw _privateConstructorUsedError;
+  String get accessToken => throw _privateConstructorUsedError;
   @UserModelConverter()
   UserModel get user => throw _privateConstructorUsedError;
 
@@ -36,7 +36,7 @@ abstract class $UserResponseCopyWith<$Res> {
           UserResponse value, $Res Function(UserResponse) then) =
       _$UserResponseCopyWithImpl<$Res, UserResponse>;
   @useResult
-  $Res call({String jwt, @UserModelConverter() UserModel user});
+  $Res call({String accessToken, @UserModelConverter() UserModel user});
 
   $UserModelCopyWith<$Res> get user;
 }
@@ -54,13 +54,13 @@ class _$UserResponseCopyWithImpl<$Res, $Val extends UserResponse>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? jwt = null,
+    Object? accessToken = null,
     Object? user = null,
   }) {
     return _then(_value.copyWith(
-      jwt: null == jwt
-          ? _value.jwt
-          : jwt // ignore: cast_nullable_to_non_nullable
+      accessToken: null == accessToken
+          ? _value.accessToken
+          : accessToken // ignore: cast_nullable_to_non_nullable
               as String,
       user: null == user
           ? _value.user
@@ -86,7 +86,7 @@ abstract class _$$UserResponseImplCopyWith<$Res>
       __$$UserResponseImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String jwt, @UserModelConverter() UserModel user});
+  $Res call({String accessToken, @UserModelConverter() UserModel user});
 
   @override
   $UserModelCopyWith<$Res> get user;
@@ -103,13 +103,13 @@ class __$$UserResponseImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? jwt = null,
+    Object? accessToken = null,
     Object? user = null,
   }) {
     return _then(_$UserResponseImpl(
-      jwt: null == jwt
-          ? _value.jwt
-          : jwt // ignore: cast_nullable_to_non_nullable
+      accessToken: null == accessToken
+          ? _value.accessToken
+          : accessToken // ignore: cast_nullable_to_non_nullable
               as String,
       user: null == user
           ? _value.user
@@ -123,20 +123,20 @@ class __$$UserResponseImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$UserResponseImpl implements _UserResponse {
   const _$UserResponseImpl(
-      {required this.jwt, @UserModelConverter() required this.user});
+      {required this.accessToken, @UserModelConverter() required this.user});
 
   factory _$UserResponseImpl.fromJson(Map<String, dynamic> json) =>
       _$$UserResponseImplFromJson(json);
 
   @override
-  final String jwt;
+  final String accessToken;
   @override
   @UserModelConverter()
   final UserModel user;
 
   @override
   String toString() {
-    return 'UserResponse(jwt: $jwt, user: $user)';
+    return 'UserResponse(accessToken: $accessToken, user: $user)';
   }
 
   @override
@@ -144,13 +144,14 @@ class _$UserResponseImpl implements _UserResponse {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$UserResponseImpl &&
-            (identical(other.jwt, jwt) || other.jwt == jwt) &&
+            (identical(other.accessToken, accessToken) ||
+                other.accessToken == accessToken) &&
             (identical(other.user, user) || other.user == user));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, jwt, user);
+  int get hashCode => Object.hash(runtimeType, accessToken, user);
 
   @JsonKey(ignore: true)
   @override
@@ -168,7 +169,7 @@ class _$UserResponseImpl implements _UserResponse {
 
 abstract class _UserResponse implements UserResponse {
   const factory _UserResponse(
-          {required final String jwt,
+          {required final String accessToken,
           @UserModelConverter() required final UserModel user}) =
       _$UserResponseImpl;
 
@@ -176,7 +177,7 @@ abstract class _UserResponse implements UserResponse {
       _$UserResponseImpl.fromJson;
 
   @override
-  String get jwt;
+  String get accessToken;
   @override
   @UserModelConverter()
   UserModel get user;

@@ -8,7 +8,7 @@ class FoodListScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final token = ref.watch(setJWTTokenStateProvider);
+    final token = ref.watch(setAccessTokenStateProvider);
 
     useEffect(() {
       Future.microtask(() {
@@ -21,33 +21,46 @@ class FoodListScreen extends HookConsumerWidget {
 
     final foodListState = ref.watch(foodListProvider);
 
-    final refreshIndicatorState = useState(false);
-
     Future<void> handleRefresh() async {
-      refreshIndicatorState.value = true;
-      try {
-        await ref.read(foodListProvider.notifier).fetchFoodList(token!);
-      } finally {
-        refreshIndicatorState.value = false;
+      if (token != null && token.isNotEmpty) {
+        await ref.read(foodListProvider.notifier).fetchFoodList(token);
       }
     }
 
     return RefreshIndicator(
-        onRefresh: handleRefresh,
-        child: foodListState.isLoading && !refreshIndicatorState.value
-            ? const Center(child: CircularProgressIndicator())
-            : foodListState.error.isNotEmpty
-                ? Center(child: Text('Error: ${foodListState.error}'))
-                : ListView.builder(
-                    itemCount: foodListState.foodList.length,
-                    itemBuilder: (context, index) {
-                      final food = foodListState.foodList[index];
-                      return ListTile(
-                        title: Text(food.name),
-                        subtitle: Text(
-                            food.description ?? 'No description available'),
-                      );
-                    },
-                  ));
+      onRefresh: handleRefresh,
+      child: Builder(
+        builder: (context) {
+          if (foodListState.isLoading) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (foodListState.error.isNotEmpty) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(foodListState.error),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: handleRefresh,
+                    child: const Text('Retry'),
+                  ),
+                ],
+              ),
+            );
+          } else {
+            return ListView.builder(
+              itemCount: foodListState.foodList.length,
+              itemBuilder: (context, index) {
+                final food = foodListState.foodList[index];
+                return ListTile(
+                  title: Text(food.name),
+                  subtitle: Text(food.description),
+                );
+              },
+            );
+          }
+        },
+      ),
+    );
   }
 }

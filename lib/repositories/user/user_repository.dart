@@ -1,48 +1,38 @@
 // ignore_for_file: deprecated_member_use
-
 import 'package:dio/dio.dart';
-import 'package:food_app/entities/otp/otp_request.dart';
-import 'package:riverpod/riverpod.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../entities/entities.dart';
+import '../../interceptor/auth_interceptor.dart';
+import '../../utils/utils.dart';
 
 abstract class UserRepository {
   Future<UserResponse> login(UserRequest req);
   Future<UserResponse> signup(UserRegisterRequest req);
   Future<UserResponse> verifyOTP(OTPRequest req);
+  Future<UserResponse> refreshToken(String token);
 }
 
 class UserRepositoryImpl implements UserRepository {
-  late Dio _dio;
+  final Dio _dio;
 
-  UserRepositoryImpl() {
-    _dio = Dio(
-      BaseOptions(
-        baseUrl: 'http://172.20.70.85:8000/api/v1/user',
-        responseType: ResponseType.json,
-      ),
-    );
-  }
+  UserRepositoryImpl(this._dio);
 
   @override
   Future<UserResponse> login(UserRequest req) async {
     try {
       final response = await _dio.post(
-        '/login',
+        AppRoute.login,
         data: req.toJson(),
-        options: Options(
-          receiveTimeout: const Duration(seconds: 5000),
-          sendTimeout: const Duration(seconds: 5000),
-        ),
       );
       return UserResponse.fromJson(response.data);
     } on DioError catch (ex) {
       if (ex.response != null && ex.response!.statusCode == 404) {
         throw ErrorModel.fromJson(ex.response!.data);
       } else {
-        throw Exception('Failed to login');
+        throw Exception('Failed to login!');
       }
     } catch (e) {
-      throw Exception('Failed to login');
+      throw Exception('Failed to login!');
     }
   }
 
@@ -50,7 +40,7 @@ class UserRepositoryImpl implements UserRepository {
   Future<UserResponse> signup(UserRegisterRequest req) async {
     try {
       final response = await _dio.post(
-        '/signup',
+        AppRoute.signup,
         data: req.toJson(),
       );
       return UserResponse.fromJson(response.data);
@@ -58,7 +48,7 @@ class UserRepositoryImpl implements UserRepository {
       if (ex.response != null && ex.response?.data != null) {
         throw ErrorModel.fromJson(ex.response!.data);
       } else {
-        throw Exception('Failed to signup repo');
+        throw Exception('Failed to signup');
       }
     }
   }
@@ -67,7 +57,7 @@ class UserRepositoryImpl implements UserRepository {
   Future<UserResponse> verifyOTP(OTPRequest req) async {
     try {
       final response = await _dio.patch(
-        '/verify',
+        AppRoute.verifyOTP,
         data: req.toJson(),
         options: Options(
           headers: {'Authorization': 'Bearer ${req.token}'},
@@ -78,12 +68,32 @@ class UserRepositoryImpl implements UserRepository {
       if (ex.response != null && ex.response?.data != null) {
         throw ErrorModel.fromJson(ex.response!.data);
       } else {
-        throw Exception('Failed to verify otp');
+        throw Exception('Failed to verify OTP');
+      }
+    }
+  }
+
+  @override
+  Future<UserResponse> refreshToken(String refreshToken) async {
+    try {
+      final response = await _dio.post(
+        AppRoute.refreshToken,
+        options: Options(
+          headers: {'Authorization': 'Bearer $refreshToken'},
+        ),
+      );
+      return UserResponse.fromJson(response.data);
+    } on DioError catch (ex) {
+      if (ex.response != null && ex.response?.data != null) {
+        throw ErrorModel.fromJson(ex.response!.data);
+      } else {
+        throw Exception('Failed to refresh token');
       }
     }
   }
 }
 
 final userRepositoryProvider = Provider<UserRepositoryImpl>((ref) {
-  return UserRepositoryImpl();
+  final dio = ref.watch(dioProvider);
+  return UserRepositoryImpl(dio);
 });

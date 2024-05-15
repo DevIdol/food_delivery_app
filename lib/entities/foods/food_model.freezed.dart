@@ -24,7 +24,7 @@ mixin _$FoodModel {
   String get id => throw _privateConstructorUsedError;
   String get vendorId => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
-  String? get description => throw _privateConstructorUsedError;
+  String get description => throw _privateConstructorUsedError;
   String get category => throw _privateConstructorUsedError;
   String get foodType => throw _privateConstructorUsedError;
   double get readyTime => throw _privateConstructorUsedError;
@@ -49,7 +49,7 @@ abstract class $FoodModelCopyWith<$Res> {
       {@JsonKey(name: '_id') String id,
       String vendorId,
       String name,
-      String? description,
+      String description,
       String category,
       String foodType,
       double readyTime,
@@ -76,7 +76,7 @@ class _$FoodModelCopyWithImpl<$Res, $Val extends FoodModel>
     Object? id = null,
     Object? vendorId = null,
     Object? name = null,
-    Object? description = freezed,
+    Object? description = null,
     Object? category = null,
     Object? foodType = null,
     Object? readyTime = null,
@@ -99,10 +99,10 @@ class _$FoodModelCopyWithImpl<$Res, $Val extends FoodModel>
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      description: freezed == description
+      description: null == description
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as String,
       category: null == category
           ? _value.category
           : category // ignore: cast_nullable_to_non_nullable
@@ -151,7 +151,7 @@ abstract class _$$FoodModelImplCopyWith<$Res>
       {@JsonKey(name: '_id') String id,
       String vendorId,
       String name,
-      String? description,
+      String description,
       String category,
       String foodType,
       double readyTime,
@@ -176,7 +176,7 @@ class __$$FoodModelImplCopyWithImpl<$Res>
     Object? id = null,
     Object? vendorId = null,
     Object? name = null,
-    Object? description = freezed,
+    Object? description = null,
     Object? category = null,
     Object? foodType = null,
     Object? readyTime = null,
@@ -199,10 +199,10 @@ class __$$FoodModelImplCopyWithImpl<$Res>
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
               as String,
-      description: freezed == description
+      description: null == description
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as String,
       category: null == category
           ? _value.category
           : category // ignore: cast_nullable_to_non_nullable
@@ -246,7 +246,7 @@ class _$FoodModelImpl implements _FoodModel {
       {@JsonKey(name: '_id') required this.id,
       required this.vendorId,
       required this.name,
-      this.description,
+      required this.description,
       required this.category,
       required this.foodType,
       required this.readyTime,
@@ -268,7 +268,7 @@ class _$FoodModelImpl implements _FoodModel {
   @override
   final String name;
   @override
-  final String? description;
+  final String description;
   @override
   final String category;
   @override
@@ -358,7 +358,7 @@ abstract class _FoodModel implements FoodModel {
       {@JsonKey(name: '_id') required final String id,
       required final String vendorId,
       required final String name,
-      final String? description,
+      required final String description,
       required final String category,
       required final String foodType,
       required final double readyTime,
@@ -379,7 +379,7 @@ abstract class _FoodModel implements FoodModel {
   @override
   String get name;
   @override
-  String? get description;
+  String get description;
   @override
   String get category;
   @override

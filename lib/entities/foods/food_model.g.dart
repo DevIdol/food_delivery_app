@@ -11,7 +11,7 @@ _$FoodModelImpl _$$FoodModelImplFromJson(Map<String, dynamic> json) =>
       id: json['_id'] as String,
       vendorId: json['vendorId'] as String,
       name: json['name'] as String,
-      description: json['description'] as String?,
+      description: json['description'] as String,
       category: json['category'] as String,
       foodType: json['foodType'] as String,
       readyTime: (json['readyTime'] as num).toDouble(),

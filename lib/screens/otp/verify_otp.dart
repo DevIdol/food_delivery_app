@@ -29,7 +29,7 @@ class _VerifyOTPScreenState extends ConsumerState<VerifyOTPScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final String token = ref.watch(setJWTTokenStateProvider) as String;
+    final String token = ref.watch(setAccessTokenStateProvider) as String;
     return LoadingOverlay(
         child: Scaffold(
       body: Center(
@@ -80,6 +80,9 @@ class _VerifyOTPScreenState extends ConsumerState<VerifyOTPScreen> {
                                   (res) => {
                                     res.fold(
                                       (l) async => {
+                                        ref
+                                            .watch(loadingProvider.notifier)
+                                            .update((state) => false),
                                         showSnackbar(context, l),
                                       },
                                       (r) async => {

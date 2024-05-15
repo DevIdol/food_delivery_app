@@ -8,12 +8,12 @@ part of 'user_response.dart';
 
 _$UserResponseImpl _$$UserResponseImplFromJson(Map<String, dynamic> json) =>
     _$UserResponseImpl(
-      jwt: json['jwt'] as String,
+      accessToken: json['accessToken'] as String,
       user: const UserModelConverter().fromJson(json['user']),
     );
 
 Map<String, dynamic> _$$UserResponseImplToJson(_$UserResponseImpl instance) =>
     <String, dynamic>{
-      'jwt': instance.jwt,
+      'accessToken': instance.accessToken,
       'user': const UserModelConverter().toJson(instance.user),
     };

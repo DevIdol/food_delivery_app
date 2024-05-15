@@ -8,7 +8,7 @@ part 'user_response.g.dart';
 @freezed
 class UserResponse with _$UserResponse {
   const factory UserResponse({
-    required String jwt,
+    required String accessToken,
     @UserModelConverter() required UserModel user,
   }) = _UserResponse;
 
