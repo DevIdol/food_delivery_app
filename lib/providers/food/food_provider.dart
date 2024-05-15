@@ -3,8 +3,6 @@ import 'package:riverpod/riverpod.dart';
 import '../../entities/entities.dart';
 import '../../repositories/repositories.dart';
 
-
-
 final foodListProvider =
     StateNotifierProvider.autoDispose<FoodListProvider, FoodListState>((ref) {
   final foodRepo = ref.watch(foodRepositoryProvider);
@@ -19,7 +17,7 @@ class FoodListProvider extends StateNotifier<FoodListState> {
   Future<void> fetchFoodList(String token) async {
     state = state.copyWith(isLoading: true);
     try {
-      final response = await _foodRepository.getFoods(token);
+      final response = await _foodRepository.getFoods();
       state = state.copyWith(
         isLoading: false,
         foodList: response.data,
@@ -33,7 +31,7 @@ class FoodListProvider extends StateNotifier<FoodListState> {
     } catch (e) {
       state = state.copyWith(
         isLoading: false,
-        error: 'Failed to fetch food list',
+        error: 'Connection faild!',
       );
     }
   }

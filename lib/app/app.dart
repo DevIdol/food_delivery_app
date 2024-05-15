@@ -12,18 +12,18 @@ class MyApp extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final jwtTokenFuture = ref.watch(getJWTTokenProvider.future);
+    final accessTokenFuture = ref.watch(getAccessTokenProvider.future);
     final isAuthenticatedAsync = ref.watch(getIsAuthenticatedProvider);
 
     useEffect(() {
       Future.microtask(() async {
-        final token = await jwtTokenFuture;
+        final token = await accessTokenFuture;
         if (token.isNotEmpty) {
-          ref.read(setJWTTokenStateProvider.notifier).state = token;
+          ref.read(setAccessTokenStateProvider.notifier).state = token;
         }
       });
       return null;
-    }, [jwtTokenFuture]);
+    }, [accessTokenFuture]);
 
     return GetMaterialApp(
       title: 'Food App',

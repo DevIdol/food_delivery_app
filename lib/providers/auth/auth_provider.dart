@@ -18,8 +18,11 @@ final setAuthStateProvider = StateProvider<UserResponse?>(
 final setUserRegisterStateProvider =
     StateProvider<UserRegisterRequest?>((ref) => null);
 
-// To store jwt token
-final setJWTTokenStateProvider = StateProvider<String?>((ref) => null);
+// To store access token
+final setAccessTokenStateProvider = StateProvider<String?>((ref) => null);
+
+// To store refresh token
+final setRefreshTokenStateProvider = StateProvider<String?>((ref) => null);
 
 // To set the auth status
 final setIsAuthenticatedProvider = StateProvider.family<void, bool>(
@@ -33,12 +36,12 @@ final setIsAuthenticatedProvider = StateProvider.family<void, bool>(
   },
 );
 
-// To set jwt token
-final setJWTTokenProvider =
-    StateProvider.family<void, String>((ref, jwt) async {
+// To set access token
+final setAccessTokenProvider =
+    StateProvider.family<void, String>((ref, accessToken) async {
   final prefs = await ref.watch(sharedPrefProvider);
   ref.watch(setAuthStateProvider);
-  prefs.setString(JWT_TOKEN, jwt);
+  prefs.setString(ACCESS_TOKEN, accessToken);
 });
 
 // To set the auth user data
@@ -62,11 +65,11 @@ final getIsAuthenticatedProvider = FutureProvider<bool>(
   },
 );
 
-// To get JWT token from storage
-final getJWTTokenProvider = FutureProvider<String>(
+// To get access token from storage
+final getAccessTokenProvider = FutureProvider<String>(
   (ref) async {
     final prefs = await ref.watch(sharedPrefProvider);
-    return prefs.getString(JWT_TOKEN) ?? '';
+    return prefs.getString(ACCESS_TOKEN) ?? '';
   },
 );
 

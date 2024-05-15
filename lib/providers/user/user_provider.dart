@@ -1,5 +1,4 @@
 import 'package:dartz/dartz.dart';
-import 'package:food_app/entities/otp/otp_request.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../entities/entities.dart';
 import '../../repositories/repositories.dart';
@@ -20,8 +19,8 @@ class UserProvider extends StateNotifier<AsyncValue<dynamic>> {
     UserRequest userReq = UserRequest(email: email, password: password);
     try {
       final response = await ref.read(userRepositoryProvider).login(userReq);
-      ref.read(setJWTTokenStateProvider.notifier).state = response.jwt;
-      ref.read(setJWTTokenProvider(response.jwt));
+      ref.read(setAccessTokenStateProvider.notifier).state = response.accessToken;
+      ref.read(setAccessTokenProvider(response.accessToken));
       ref.read(setAuthStateProvider.notifier).state = response;
       ref.read(setIsAuthenticatedProvider(true));
       ref.read(setAuthenticatedUserProvider(response.user));
@@ -54,7 +53,7 @@ class UserProvider extends StateNotifier<AsyncValue<dynamic>> {
     try {
       final response = await ref.read(userRepositoryProvider).signup(userReq);
       ref.read(setUserRegisterStateProvider.notifier).state = userReq;
-      ref.read(setJWTTokenStateProvider.notifier).state = response.jwt;
+      ref.read(setAccessTokenStateProvider.notifier).state = response.accessToken;
       return const Right(true);
     } on ErrorModel catch (error) {
       return Left(error.message);
@@ -89,7 +88,7 @@ class UserProvider extends StateNotifier<AsyncValue<dynamic>> {
 
       ref.read(setUserRegisterStateProvider.notifier).state = null;
 
-      ref.read(setJWTTokenStateProvider.notifier).state = null;
+      ref.read(setAccessTokenStateProvider.notifier).state = null;
 
       return true;
     } catch (e) {
