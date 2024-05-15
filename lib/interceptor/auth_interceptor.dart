@@ -62,7 +62,7 @@ class AuthInterceptor extends Interceptor {
 final dioProvider = Provider<Dio>((ref) {
   final dio = Dio(
     BaseOptions(
-      baseUrl: 'http://172.20.70.85:8000/api/v1/user',
+      baseUrl: 'http://172.20.30.52:8000/api/v1/user',
       responseType: ResponseType.json,
     ),
   );

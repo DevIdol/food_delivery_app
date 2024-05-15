@@ -13,7 +13,7 @@ _$FoodModelImpl _$$FoodModelImplFromJson(Map<String, dynamic> json) =>
       name: json['name'] as String,
       description: json['description'] as String,
       category: json['category'] as String,
-      foodType: json['foodType'] as String,
+      foodType: json['foodType'] as String?,
       readyTime: (json['readyTime'] as num).toDouble(),
       price: (json['price'] as num).toDouble(),
       rating: (json['rating'] as num).toDouble(),
