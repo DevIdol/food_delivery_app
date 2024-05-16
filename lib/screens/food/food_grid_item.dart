@@ -35,7 +35,7 @@ class FoodGridItem extends StatelessWidget {
                         food.images.isNotEmpty && food.images.first != null
                             ? food.images.first!
                             : 'https://via.placeholder.com/150',
-                    fit: BoxFit.cover,
+                    fit: BoxFit.fill,
                     placeholder: (context, url) => const Center(
                       child: CircularProgressIndicator(),
                     ),

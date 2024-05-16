@@ -30,7 +30,7 @@ class FoodDetailScreen extends HookConsumerWidget {
                 imageUrl: food.images.isNotEmpty && food.images.first != null
                     ? food.images.first!
                     : 'https://via.placeholder.com/150',
-                fit: BoxFit.cover,
+                fit: BoxFit.fill,
                 placeholder: (context, url) =>
                     const CircularProgressIndicator(),
                 errorWidget: (context, url, error) => const Icon(Icons.error),
