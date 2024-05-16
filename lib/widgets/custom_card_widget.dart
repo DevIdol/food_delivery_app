@@ -4,6 +4,7 @@ class CustomCard extends StatelessWidget {
   final double? width;
   final Color? color;
   final Widget child;
+  final double  radius;
   final EdgeInsetsGeometry? padding;
 
   const CustomCard({
@@ -11,6 +12,7 @@ class CustomCard extends StatelessWidget {
     this.width,
     this.color,
     this.padding,
+    this.radius = 15,
     required this.child,
   });
 

@@ -19,7 +19,8 @@ class UserProvider extends StateNotifier<AsyncValue<dynamic>> {
     UserRequest userReq = UserRequest(email: email, password: password);
     try {
       final response = await ref.read(userRepositoryProvider).login(userReq);
-      ref.read(setAccessTokenStateProvider.notifier).state = response.accessToken;
+      ref.read(setAccessTokenStateProvider.notifier).state =
+          response.accessToken;
       ref.read(setAccessTokenProvider(response.accessToken));
       ref.read(setAuthStateProvider.notifier).state = response;
       ref.read(setIsAuthenticatedProvider(true));
@@ -53,7 +54,8 @@ class UserProvider extends StateNotifier<AsyncValue<dynamic>> {
     try {
       final response = await ref.read(userRepositoryProvider).signup(userReq);
       ref.read(setUserRegisterStateProvider.notifier).state = userReq;
-      ref.read(setAccessTokenStateProvider.notifier).state = response.accessToken;
+      ref.read(setAccessTokenStateProvider.notifier).state =
+          response.accessToken;
       return const Right(true);
     } on ErrorModel catch (error) {
       return Left(error.message);
@@ -82,7 +84,7 @@ class UserProvider extends StateNotifier<AsyncValue<dynamic>> {
   // logout
   Future<dynamic> logout() async {
     try {
-      await ref.read(resetStorage);
+      ref.read(resetStorage);
 
       ref.read(setAuthStateProvider.notifier).state = null;
 
