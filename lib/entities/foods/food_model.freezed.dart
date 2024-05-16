@@ -26,7 +26,7 @@ mixin _$FoodModel {
   String get name => throw _privateConstructorUsedError;
   String get description => throw _privateConstructorUsedError;
   String get category => throw _privateConstructorUsedError;
-  String get foodType => throw _privateConstructorUsedError;
+  String? get foodType => throw _privateConstructorUsedError;
   double get readyTime => throw _privateConstructorUsedError;
   double get price => throw _privateConstructorUsedError;
   double get rating => throw _privateConstructorUsedError;
@@ -51,7 +51,7 @@ abstract class $FoodModelCopyWith<$Res> {
       String name,
       String description,
       String category,
-      String foodType,
+      String? foodType,
       double readyTime,
       double price,
       double rating,
@@ -78,7 +78,7 @@ class _$FoodModelCopyWithImpl<$Res, $Val extends FoodModel>
     Object? name = null,
     Object? description = null,
     Object? category = null,
-    Object? foodType = null,
+    Object? foodType = freezed,
     Object? readyTime = null,
     Object? price = null,
     Object? rating = null,
@@ -107,10 +107,10 @@ class _$FoodModelCopyWithImpl<$Res, $Val extends FoodModel>
           ? _value.category
           : category // ignore: cast_nullable_to_non_nullable
               as String,
-      foodType: null == foodType
+      foodType: freezed == foodType
           ? _value.foodType
           : foodType // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       readyTime: null == readyTime
           ? _value.readyTime
           : readyTime // ignore: cast_nullable_to_non_nullable
@@ -153,7 +153,7 @@ abstract class _$$FoodModelImplCopyWith<$Res>
       String name,
       String description,
       String category,
-      String foodType,
+      String? foodType,
       double readyTime,
       double price,
       double rating,
@@ -178,7 +178,7 @@ class __$$FoodModelImplCopyWithImpl<$Res>
     Object? name = null,
     Object? description = null,
     Object? category = null,
-    Object? foodType = null,
+    Object? foodType = freezed,
     Object? readyTime = null,
     Object? price = null,
     Object? rating = null,
@@ -207,10 +207,10 @@ class __$$FoodModelImplCopyWithImpl<$Res>
           ? _value.category
           : category // ignore: cast_nullable_to_non_nullable
               as String,
-      foodType: null == foodType
+      foodType: freezed == foodType
           ? _value.foodType
           : foodType // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       readyTime: null == readyTime
           ? _value.readyTime
           : readyTime // ignore: cast_nullable_to_non_nullable
@@ -248,7 +248,7 @@ class _$FoodModelImpl implements _FoodModel {
       required this.name,
       required this.description,
       required this.category,
-      required this.foodType,
+      this.foodType,
       required this.readyTime,
       required this.price,
       required this.rating,
@@ -272,7 +272,7 @@ class _$FoodModelImpl implements _FoodModel {
   @override
   final String category;
   @override
-  final String foodType;
+  final String? foodType;
   @override
   final double readyTime;
   @override
@@ -360,7 +360,7 @@ abstract class _FoodModel implements FoodModel {
       required final String name,
       required final String description,
       required final String category,
-      required final String foodType,
+      final String? foodType,
       required final double readyTime,
       required final double price,
       required final double rating,
@@ -383,7 +383,7 @@ abstract class _FoodModel implements FoodModel {
   @override
   String get category;
   @override
-  String get foodType;
+  String? get foodType;
   @override
   double get readyTime;
   @override

@@ -11,7 +11,7 @@ class FoodModel with _$FoodModel {
     required String name,
     required String description,
     required String category,
-    required String foodType,
+    String? foodType,
     required double readyTime,
     required double price,
     required double rating,

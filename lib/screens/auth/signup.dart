@@ -43,6 +43,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
           padding: const EdgeInsets.all(20),
           child: SingleChildScrollView(
             child: CustomCard(
+              padding: const EdgeInsets.all(20),
               color: AppColor.cardColor,
               width: MediaQuery.of(context).size.width * 0.9,
               child: FormWidget(
