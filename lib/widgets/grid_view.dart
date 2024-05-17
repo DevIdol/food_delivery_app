@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:skeletonizer/skeletonizer.dart';
+import 'widgets.dart';
 
 class CustomListGridView<T> extends StatelessWidget {
   final List<T> items;
@@ -23,21 +23,25 @@ class CustomListGridView<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Skeletonizer(
-      enabled: isLoading,
-      child: GridView.builder(
-        padding: const EdgeInsets.all(8.0),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: crossAxisCount,
-          crossAxisSpacing: crossAxisSpacing,
-          mainAxisSpacing: mainAxisSpacing,
-          childAspectRatio: childAspectRatio,
-        ),
-        itemCount: items.length,
-        itemBuilder: (context, index) {
-          return itemBuilder(context, items[index]);
-        },
+    return GridView.builder(
+      padding: const EdgeInsets.all(8.0),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: crossAxisCount,
+        crossAxisSpacing: crossAxisSpacing,
+        mainAxisSpacing: mainAxisSpacing,
+        childAspectRatio: childAspectRatio,
       ),
+      itemCount: isLoading ? 6 : items.length,
+      itemBuilder: (context, index) {
+        if (isLoading) {
+          return const SkeletonGridLoading();
+        } else if (items.isEmpty && !isLoading) {
+          return const Center(
+            child: Text('There is no data yet.'),
+          );
+        }
+        return itemBuilder(context, items[index]);
+      },
     );
   }
 }

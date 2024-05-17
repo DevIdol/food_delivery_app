@@ -31,6 +31,7 @@ class FoodListProvider extends StateNotifier<FoodListState> {
     } catch (e) {
       state = state.copyWith(
         isLoading: false,
+        foodList: state.foodList,
         error: 'Connection faild!',
       );
     }
