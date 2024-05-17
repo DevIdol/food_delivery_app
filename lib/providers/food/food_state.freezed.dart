@@ -19,6 +19,9 @@ mixin _$FoodListState {
   bool get isLoading => throw _privateConstructorUsedError;
   List<FoodModel> get foodList => throw _privateConstructorUsedError;
   String get error => throw _privateConstructorUsedError;
+  String get searchQuery => throw _privateConstructorUsedError;
+  String get selectedFoodType => throw _privateConstructorUsedError;
+  String get selectedCategory => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $FoodListStateCopyWith<FoodListState> get copyWith =>
@@ -31,7 +34,13 @@ abstract class $FoodListStateCopyWith<$Res> {
           FoodListState value, $Res Function(FoodListState) then) =
       _$FoodListStateCopyWithImpl<$Res, FoodListState>;
   @useResult
-  $Res call({bool isLoading, List<FoodModel> foodList, String error});
+  $Res call(
+      {bool isLoading,
+      List<FoodModel> foodList,
+      String error,
+      String searchQuery,
+      String selectedFoodType,
+      String selectedCategory});
 }
 
 /// @nodoc
@@ -50,6 +59,9 @@ class _$FoodListStateCopyWithImpl<$Res, $Val extends FoodListState>
     Object? isLoading = null,
     Object? foodList = null,
     Object? error = null,
+    Object? searchQuery = null,
+    Object? selectedFoodType = null,
+    Object? selectedCategory = null,
   }) {
     return _then(_value.copyWith(
       isLoading: null == isLoading
@@ -64,6 +76,18 @@ class _$FoodListStateCopyWithImpl<$Res, $Val extends FoodListState>
           ? _value.error
           : error // ignore: cast_nullable_to_non_nullable
               as String,
+      searchQuery: null == searchQuery
+          ? _value.searchQuery
+          : searchQuery // ignore: cast_nullable_to_non_nullable
+              as String,
+      selectedFoodType: null == selectedFoodType
+          ? _value.selectedFoodType
+          : selectedFoodType // ignore: cast_nullable_to_non_nullable
+              as String,
+      selectedCategory: null == selectedCategory
+          ? _value.selectedCategory
+          : selectedCategory // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 }
@@ -76,7 +100,13 @@ abstract class _$$FoodListStateImplCopyWith<$Res>
       __$$FoodListStateImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({bool isLoading, List<FoodModel> foodList, String error});
+  $Res call(
+      {bool isLoading,
+      List<FoodModel> foodList,
+      String error,
+      String searchQuery,
+      String selectedFoodType,
+      String selectedCategory});
 }
 
 /// @nodoc
@@ -93,6 +123,9 @@ class __$$FoodListStateImplCopyWithImpl<$Res>
     Object? isLoading = null,
     Object? foodList = null,
     Object? error = null,
+    Object? searchQuery = null,
+    Object? selectedFoodType = null,
+    Object? selectedCategory = null,
   }) {
     return _then(_$FoodListStateImpl(
       isLoading: null == isLoading
@@ -107,6 +140,18 @@ class __$$FoodListStateImplCopyWithImpl<$Res>
           ? _value.error
           : error // ignore: cast_nullable_to_non_nullable
               as String,
+      searchQuery: null == searchQuery
+          ? _value.searchQuery
+          : searchQuery // ignore: cast_nullable_to_non_nullable
+              as String,
+      selectedFoodType: null == selectedFoodType
+          ? _value.selectedFoodType
+          : selectedFoodType // ignore: cast_nullable_to_non_nullable
+              as String,
+      selectedCategory: null == selectedCategory
+          ? _value.selectedCategory
+          : selectedCategory // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -117,7 +162,10 @@ class _$FoodListStateImpl implements _FoodListState {
   const _$FoodListStateImpl(
       {this.isLoading = true,
       final List<FoodModel> foodList = const <FoodModel>[],
-      this.error = ''})
+      this.error = '',
+      this.searchQuery = '',
+      this.selectedFoodType = '',
+      this.selectedCategory = ''})
       : _foodList = foodList;
 
   @override
@@ -135,10 +183,19 @@ class _$FoodListStateImpl implements _FoodListState {
   @override
   @JsonKey()
   final String error;
+  @override
+  @JsonKey()
+  final String searchQuery;
+  @override
+  @JsonKey()
+  final String selectedFoodType;
+  @override
+  @JsonKey()
+  final String selectedCategory;
 
   @override
   String toString() {
-    return 'FoodListState(isLoading: $isLoading, foodList: $foodList, error: $error)';
+    return 'FoodListState(isLoading: $isLoading, foodList: $foodList, error: $error, searchQuery: $searchQuery, selectedFoodType: $selectedFoodType, selectedCategory: $selectedCategory)';
   }
 
   @override
@@ -149,12 +206,24 @@ class _$FoodListStateImpl implements _FoodListState {
             (identical(other.isLoading, isLoading) ||
                 other.isLoading == isLoading) &&
             const DeepCollectionEquality().equals(other._foodList, _foodList) &&
-            (identical(other.error, error) || other.error == error));
+            (identical(other.error, error) || other.error == error) &&
+            (identical(other.searchQuery, searchQuery) ||
+                other.searchQuery == searchQuery) &&
+            (identical(other.selectedFoodType, selectedFoodType) ||
+                other.selectedFoodType == selectedFoodType) &&
+            (identical(other.selectedCategory, selectedCategory) ||
+                other.selectedCategory == selectedCategory));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, isLoading,
-      const DeepCollectionEquality().hash(_foodList), error);
+  int get hashCode => Object.hash(
+      runtimeType,
+      isLoading,
+      const DeepCollectionEquality().hash(_foodList),
+      error,
+      searchQuery,
+      selectedFoodType,
+      selectedCategory);
 
   @JsonKey(ignore: true)
   @override
@@ -167,7 +236,10 @@ abstract class _FoodListState implements FoodListState {
   const factory _FoodListState(
       {final bool isLoading,
       final List<FoodModel> foodList,
-      final String error}) = _$FoodListStateImpl;
+      final String error,
+      final String searchQuery,
+      final String selectedFoodType,
+      final String selectedCategory}) = _$FoodListStateImpl;
 
   @override
   bool get isLoading;
@@ -175,6 +247,12 @@ abstract class _FoodListState implements FoodListState {
   List<FoodModel> get foodList;
   @override
   String get error;
+  @override
+  String get searchQuery;
+  @override
+  String get selectedFoodType;
+  @override
+  String get selectedCategory;
   @override
   @JsonKey(ignore: true)
   _$$FoodListStateImplCopyWith<_$FoodListStateImpl> get copyWith =>
