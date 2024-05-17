@@ -11,17 +11,29 @@ class FoodListScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final token = ref.watch(setAccessTokenStateProvider);
+    final foodListState = ref.watch(foodListProvider);
 
     useEffect(() {
-      Future.microtask(() {
-        if (token != null && token.isNotEmpty) {
+      if (token != null && token.isNotEmpty) {
+        Future.microtask(() {
           ref.read(foodListProvider.notifier).fetchFoodList(token);
-        }
-      });
+        });
+      }
+
       return null;
     }, [token]);
 
-    final foodListState = ref.watch(foodListProvider);
+    useEffect(() {
+      if (foodListState.error.isNotEmpty && foodListState.foodList.isNotEmpty) {
+        final snackBar = SnackBar(
+          content: Text(foodListState.error),
+        );
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        });
+      }
+      return null;
+    }, [foodListState.error]);
 
     Future<void> handleRefresh() async {
       if (token != null && token.isNotEmpty) {
@@ -29,13 +41,29 @@ class FoodListScreen extends HookConsumerWidget {
       }
     }
 
-    return RefreshIndicator(
-      onRefresh: handleRefresh,
-      child: CustomListGridView(
-        isLoading: foodListState.isLoading,
-        items: foodListState.foodList,
-        itemBuilder: (context, food) => FoodGridItem(food: food),
-      ),
-    );
+    if (foodListState.error.isNotEmpty && foodListState.foodList.isEmpty) {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(foodListState.error),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: handleRefresh,
+              child: const Text('Retry'),
+            ),
+          ],
+        ),
+      );
+    } else {
+      return RefreshIndicator(
+        onRefresh: handleRefresh,
+        child: CustomListGridView(
+          isLoading: foodListState.isLoading,
+          items: foodListState.foodList,
+          itemBuilder: (context, food) => FoodGridItem(food: food),
+        ),
+      );
+    }
   }
 }

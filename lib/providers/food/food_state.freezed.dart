@@ -115,7 +115,7 @@ class __$$FoodListStateImplCopyWithImpl<$Res>
 
 class _$FoodListStateImpl implements _FoodListState {
   const _$FoodListStateImpl(
-      {this.isLoading = false,
+      {this.isLoading = true,
       final List<FoodModel> foodList = const <FoodModel>[],
       this.error = ''})
       : _foodList = foodList;

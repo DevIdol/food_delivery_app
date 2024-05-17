@@ -10,10 +10,12 @@ import 'food_detail.dart';
 class FoodGridItem extends StatelessWidget {
   final FoodModel food;
 
-  const FoodGridItem({super.key, required this.food});
+  const FoodGridItem(
+      {super.key, required this.food});
 
   @override
   Widget build(BuildContext context) {
+
     return InkWell(
       onTap: () => {Get.to(FoodDetailScreen(foodId: food.id))},
       child: CustomCard(
