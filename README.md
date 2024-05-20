@@ -3,6 +3,15 @@
 ### freezed generator
 ```
 dart run build_runner build
+or
+flutter pub run build_runner build --delete-conflicting-outputs
+```
+
+### riverpod generator
+```
+dart run build_runner watch
+or
+dart run build_runner watch -d
 ```
 
 

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 final navigationContextProvider = Provider<BuildContext>((ref) {
   final context = navigatorKey.currentContext;
   if (context == null) {
@@ -9,5 +11,3 @@ final navigationContextProvider = Provider<BuildContext>((ref) {
   return context;
 });
 
-
-final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
