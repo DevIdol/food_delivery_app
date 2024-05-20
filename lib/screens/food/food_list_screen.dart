@@ -118,6 +118,7 @@ class FoodListScreen extends HookConsumerWidget {
         body: RefreshIndicator(
           onRefresh: handleRefresh,
           child: CustomListGridView(
+            
             isLoading: foodListState.isLoading,
             items: foodListNotifier.filteredFoodList,
             itemBuilder: (context, food) => FoodGridItem(food: food),

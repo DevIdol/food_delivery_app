@@ -14,16 +14,38 @@ class HomeScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final index = ref.watch(navigationNoifierProvider);
+
     return Scaffold(
-      bottomNavigationBar: NavigationBar(
-        destinations: const [
-          NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
-          NavigationDestination(icon: Icon(Icons.call), label: 'Contact')
-        ],
-        selectedIndex: index,
-        onDestinationSelected: (value) => {
-          ref.read(navigationNoifierProvider.notifier).setSelectedIndex(value)
-        },
+      bottomNavigationBar: ClipRRect(
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(20),
+          topRight: Radius.circular(20),
+        ),
+        child: BottomNavigationBar(
+          showSelectedLabels: false,
+          showUnselectedLabels: false,
+          currentIndex: index,
+          iconSize: 30,
+          onTap: (value) {
+            ref.read(navigationNoifierProvider.notifier).setSelectedIndex(value);
+          },
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home_outlined, size: 28),
+              activeIcon: Icon(Icons.home, size: 30),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.call_outlined, size: 28),
+              activeIcon: Icon(Icons.call, size: 30),
+              label: 'Call',
+            ),
+          ],
+          selectedItemColor: AppColor.primaryColor,
+          backgroundColor: AppColor.cardColor,
+          type: BottomNavigationBarType.fixed,
+          elevation: 10,
+        ),
       ),
       appBar: AppBar(
         title: const Text('Food Delivery App'),

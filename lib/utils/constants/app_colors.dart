@@ -24,4 +24,5 @@ class AppColor {
   static const Color cardColor = Color(0xE4FFFFFF);
   static const Color goldColor = Color(0xFFFFC107);
   static const Color transparent = Color(0x99FFFFFF);
+  static const Color scaffoldBgColor = Color(0xFFF1F1F1);
 }

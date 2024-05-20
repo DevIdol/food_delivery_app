@@ -89,7 +89,7 @@ final dioProvider = Provider<Dio>((ref) {
   final context = ref.watch(navigationContextProvider);
   final dio = Dio(
     BaseOptions(
-      baseUrl: 'http://172.20.80.20:8000/api/v1/user',
+      baseUrl: 'http://192.168.1.4:8000/api/v1/user',
       responseType: ResponseType.json,
       sendTimeout: const Duration(seconds: 10),
       connectTimeout: const Duration(seconds: 10),

@@ -35,6 +35,7 @@ class MyApp extends HookConsumerWidget {
       navigatorKey: navigatorKey,
       title: 'Food App',
       theme: ThemeData(
+        scaffoldBackgroundColor: AppColor.scaffoldBgColor,
         colorScheme: ColorScheme.fromSeed(seedColor: AppColor.primaryColor),
         useMaterial3: true,
       ),
