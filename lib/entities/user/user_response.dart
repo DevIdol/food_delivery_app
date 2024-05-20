@@ -8,7 +8,8 @@ part 'user_response.g.dart';
 @freezed
 class UserResponse with _$UserResponse {
   const factory UserResponse({
-    required String accessToken,
+    @JsonKey(includeToJson: false) String? accessToken,
+    required String refreshToken,
     @UserModelConverter() required UserModel user,
   }) = _UserResponse;
 

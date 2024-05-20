@@ -20,7 +20,9 @@ UserResponse _$UserResponseFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$UserResponse {
-  String get accessToken => throw _privateConstructorUsedError;
+  @JsonKey(includeToJson: false)
+  String? get accessToken => throw _privateConstructorUsedError;
+  String get refreshToken => throw _privateConstructorUsedError;
   @UserModelConverter()
   UserModel get user => throw _privateConstructorUsedError;
 
@@ -36,7 +38,10 @@ abstract class $UserResponseCopyWith<$Res> {
           UserResponse value, $Res Function(UserResponse) then) =
       _$UserResponseCopyWithImpl<$Res, UserResponse>;
   @useResult
-  $Res call({String accessToken, @UserModelConverter() UserModel user});
+  $Res call(
+      {@JsonKey(includeToJson: false) String? accessToken,
+      String refreshToken,
+      @UserModelConverter() UserModel user});
 
   $UserModelCopyWith<$Res> get user;
 }
@@ -54,13 +59,18 @@ class _$UserResponseCopyWithImpl<$Res, $Val extends UserResponse>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? accessToken = null,
+    Object? accessToken = freezed,
+    Object? refreshToken = null,
     Object? user = null,
   }) {
     return _then(_value.copyWith(
-      accessToken: null == accessToken
+      accessToken: freezed == accessToken
           ? _value.accessToken
           : accessToken // ignore: cast_nullable_to_non_nullable
+              as String?,
+      refreshToken: null == refreshToken
+          ? _value.refreshToken
+          : refreshToken // ignore: cast_nullable_to_non_nullable
               as String,
       user: null == user
           ? _value.user
@@ -86,7 +96,10 @@ abstract class _$$UserResponseImplCopyWith<$Res>
       __$$UserResponseImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String accessToken, @UserModelConverter() UserModel user});
+  $Res call(
+      {@JsonKey(includeToJson: false) String? accessToken,
+      String refreshToken,
+      @UserModelConverter() UserModel user});
 
   @override
   $UserModelCopyWith<$Res> get user;
@@ -103,13 +116,18 @@ class __$$UserResponseImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? accessToken = null,
+    Object? accessToken = freezed,
+    Object? refreshToken = null,
     Object? user = null,
   }) {
     return _then(_$UserResponseImpl(
-      accessToken: null == accessToken
+      accessToken: freezed == accessToken
           ? _value.accessToken
           : accessToken // ignore: cast_nullable_to_non_nullable
+              as String?,
+      refreshToken: null == refreshToken
+          ? _value.refreshToken
+          : refreshToken // ignore: cast_nullable_to_non_nullable
               as String,
       user: null == user
           ? _value.user
@@ -123,20 +141,25 @@ class __$$UserResponseImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$UserResponseImpl implements _UserResponse {
   const _$UserResponseImpl(
-      {required this.accessToken, @UserModelConverter() required this.user});
+      {@JsonKey(includeToJson: false) this.accessToken,
+      required this.refreshToken,
+      @UserModelConverter() required this.user});
 
   factory _$UserResponseImpl.fromJson(Map<String, dynamic> json) =>
       _$$UserResponseImplFromJson(json);
 
   @override
-  final String accessToken;
+  @JsonKey(includeToJson: false)
+  final String? accessToken;
+  @override
+  final String refreshToken;
   @override
   @UserModelConverter()
   final UserModel user;
 
   @override
   String toString() {
-    return 'UserResponse(accessToken: $accessToken, user: $user)';
+    return 'UserResponse(accessToken: $accessToken, refreshToken: $refreshToken, user: $user)';
   }
 
   @override
@@ -146,12 +169,14 @@ class _$UserResponseImpl implements _UserResponse {
             other is _$UserResponseImpl &&
             (identical(other.accessToken, accessToken) ||
                 other.accessToken == accessToken) &&
+            (identical(other.refreshToken, refreshToken) ||
+                other.refreshToken == refreshToken) &&
             (identical(other.user, user) || other.user == user));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, accessToken, user);
+  int get hashCode => Object.hash(runtimeType, accessToken, refreshToken, user);
 
   @JsonKey(ignore: true)
   @override
@@ -169,7 +194,8 @@ class _$UserResponseImpl implements _UserResponse {
 
 abstract class _UserResponse implements UserResponse {
   const factory _UserResponse(
-          {required final String accessToken,
+          {@JsonKey(includeToJson: false) final String? accessToken,
+          required final String refreshToken,
           @UserModelConverter() required final UserModel user}) =
       _$UserResponseImpl;
 
@@ -177,7 +203,10 @@ abstract class _UserResponse implements UserResponse {
       _$UserResponseImpl.fromJson;
 
   @override
-  String get accessToken;
+  @JsonKey(includeToJson: false)
+  String? get accessToken;
+  @override
+  String get refreshToken;
   @override
   @UserModelConverter()
   UserModel get user;

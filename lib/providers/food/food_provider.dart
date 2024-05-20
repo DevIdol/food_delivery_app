@@ -23,7 +23,7 @@ class FoodListProvider extends StateNotifier<FoodListState> {
         foodList: response.data,
         error: '',
       );
-    } on ErrorModel catch (error) {
+    } on HTTPResponse catch (error) {
       state = state.copyWith(
         isLoading: false,
         error: error.message,

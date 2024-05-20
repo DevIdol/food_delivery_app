@@ -2,7 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../entities/entities.dart';
 import '../../repositories/repositories.dart';
-import '../auth/auth_provider.dart';
+import '../providers.dart';
 
 class UserProvider extends StateNotifier<AsyncValue<dynamic>> {
   Ref ref;
@@ -19,14 +19,18 @@ class UserProvider extends StateNotifier<AsyncValue<dynamic>> {
     UserRequest userReq = UserRequest(email: email, password: password);
     try {
       final response = await ref.read(userRepositoryProvider).login(userReq);
+      ref.read(setIsAuthenticatedProvider(true));
       ref.read(setAccessTokenStateProvider.notifier).state =
           response.accessToken;
-      ref.read(setAccessTokenProvider(response.accessToken));
+      ref.read(setRefreshTokenStateProvider.notifier).state =
+          response.refreshToken;
+      ref.read(setAccessTokenProvider(response.accessToken!));
+      ref.read(setRefreshTokenProvider(response.refreshToken));
       ref.read(setAuthStateProvider.notifier).state = response;
-      ref.read(setIsAuthenticatedProvider(true));
+
       ref.read(setAuthenticatedUserProvider(response.user));
       return const Right(true);
-    } on ErrorModel catch (error) {
+    } on HTTPResponse catch (error) {
       return Left(error.message);
     } catch (e) {
       return const Left('Failed to login');
@@ -56,11 +60,31 @@ class UserProvider extends StateNotifier<AsyncValue<dynamic>> {
       ref.read(setUserRegisterStateProvider.notifier).state = userReq;
       ref.read(setAccessTokenStateProvider.notifier).state =
           response.accessToken;
+      ref.read(setRefreshTokenStateProvider.notifier).state =
+          response.refreshToken;
       return const Right(true);
-    } on ErrorModel catch (error) {
+    } on HTTPResponse catch (error) {
       return Left(error.message);
     } catch (e) {
       return const Left('Failed to signup!!');
+    }
+  }
+
+  // Refresh Token
+  Future<Either<String, bool>> refreshToken(
+      {required String refreshToken}) async {
+    state = const AsyncLoading();
+    try {
+      final response =
+          await ref.read(userRepositoryProvider).refreshToken(refreshToken);
+      final newAccessToken = response.accessToken;
+      ref.read(setAccessTokenStateProvider.notifier).state = newAccessToken;
+      ref.read(setAccessTokenProvider(newAccessToken!));
+      return const Right(true);
+    } on HTTPResponse catch (error) {
+      return Left(error.message);
+    } catch (e) {
+      return const Left('Failed to refresh token');
     }
   }
 
@@ -74,7 +98,7 @@ class UserProvider extends StateNotifier<AsyncValue<dynamic>> {
           ref.watch(setUserRegisterStateProvider) as UserRegisterRequest;
       ref.read(resetStorage);
       return Right(registerInfo);
-    } on ErrorModel catch (error) {
+    } on HTTPResponse catch (error) {
       return Left(error.message);
     } catch (error) {
       return const Left('Failed to verify otp');
@@ -82,18 +106,24 @@ class UserProvider extends StateNotifier<AsyncValue<dynamic>> {
   }
 
   // logout
-  Future<dynamic> logout() async {
-    try {
-      ref.read(resetStorage);
+  Future<bool> logout() async {
+    ref.read(resetStorage);
 
-      ref.read(setAuthStateProvider.notifier).state = null;
+    final authState = ref.read(setAuthStateProvider.notifier).state = null;
 
-      ref.read(setUserRegisterStateProvider.notifier).state = null;
+    final userInfo =
+        ref.read(setUserRegisterStateProvider.notifier).state = null;
 
-      ref.read(setAccessTokenStateProvider.notifier).state = null;
-
+    final accessToken =
+        ref.read(setAccessTokenStateProvider.notifier).state = null;
+    final refreshToken =
+        ref.read(setRefreshTokenStateProvider.notifier).state = null;
+    if (authState == null &&
+        userInfo == null &&
+        accessToken == null &&
+        refreshToken == null) {
       return true;
-    } catch (e) {
+    } else {
       return false;
     }
   }
