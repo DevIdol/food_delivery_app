@@ -1,4 +1,3 @@
-// ignore_for_file: deprecated_member_use
 import 'package:dio/dio.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../entities/entities.dart';
@@ -9,7 +8,7 @@ abstract class UserRepository {
   Future<UserResponse> login(UserRequest req);
   Future<UserResponse> signup(UserRegisterRequest req);
   Future<UserResponse> verifyOTP(OTPRequest req);
-  Future<UserResponse> refreshToken(String token);
+  Future<HTTPResponse> refreshToken(String token);
 }
 
 class UserRepositoryImpl implements UserRepository {
@@ -24,10 +23,17 @@ class UserRepositoryImpl implements UserRepository {
         AppRoute.login,
         data: req.toJson(),
       );
-      return UserResponse.fromJson(response.data);
-    } on DioError catch (ex) {
+      final accessToken = response.headers.value('Access-Token');
+
+      if (accessToken == null) {
+        throw Exception('Access-Token not found in response headers!');
+      }
+
+      final userResponse = UserResponse.fromJson(response.data);
+      return userResponse.copyWith(accessToken: accessToken);
+    } on DioException catch (ex) {
       if (ex.response != null && ex.response!.statusCode == 404) {
-        throw ErrorModel.fromJson(ex.response!.data);
+        throw HTTPResponse.fromJson(ex.response!.data);
       } else {
         throw Exception('Failed to login!');
       }
@@ -43,10 +49,17 @@ class UserRepositoryImpl implements UserRepository {
         AppRoute.signup,
         data: req.toJson(),
       );
-      return UserResponse.fromJson(response.data);
-    } on DioError catch (ex) {
+      final accessToken = response.headers.value('Access-Token');
+
+      if (accessToken == null) {
+        throw Exception('Access-Token not found in response headers!');
+      }
+
+      final userResponse = UserResponse.fromJson(response.data);
+      return userResponse.copyWith(accessToken: accessToken);
+    } on DioException catch (ex) {
       if (ex.response != null && ex.response?.data != null) {
-        throw ErrorModel.fromJson(ex.response!.data);
+        throw HTTPResponse.fromJson(ex.response!.data);
       } else {
         throw Exception('Failed to signup');
       }
@@ -64,9 +77,9 @@ class UserRepositoryImpl implements UserRepository {
         ),
       );
       return UserResponse.fromJson(response.data);
-    } on DioError catch (ex) {
+    } on DioException catch (ex) {
       if (ex.response != null && ex.response?.data != null) {
-        throw ErrorModel.fromJson(ex.response!.data);
+        throw HTTPResponse.fromJson(ex.response!.data);
       } else {
         throw Exception('Failed to verify OTP');
       }
@@ -74,18 +87,24 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   @override
-  Future<UserResponse> refreshToken(String refreshToken) async {
+  Future<HTTPResponse> refreshToken(String refreshToken) async {
     try {
       final response = await _dio.post(
         AppRoute.refreshToken,
         options: Options(
-          headers: {'Authorization': 'Bearer $refreshToken'},
+          headers: {'Refresh-Token': refreshToken},
         ),
       );
-      return UserResponse.fromJson(response.data);
-    } on DioError catch (ex) {
+      final accessToken = response.headers.value('Access-Token');
+
+      if (accessToken == null) {
+        throw Exception('Access-Token not found in response headers!');
+      }
+      final refreshTokenRes = HTTPResponse.fromJson(response.data);
+      return refreshTokenRes.copyWith(accessToken: accessToken);
+    } on DioException catch (ex) {
       if (ex.response != null && ex.response?.data != null) {
-        throw ErrorModel.fromJson(ex.response!.data);
+        throw HTTPResponse.fromJson(ex.response!.data);
       } else {
         throw Exception('Failed to refresh token');
       }

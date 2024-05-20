@@ -1,19 +1,23 @@
-// ignore_for_file: deprecated_member_use
 import 'package:dio/dio.dart';
-import 'package:food_app/utils/constants/app_routes.dart';
+import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../providers/providers.dart';
-import '../repositories/repositories.dart';
+import '../utils/utils.dart';
+import '../widgets/widgets.dart';
 
 class AuthInterceptor extends Interceptor {
-  Ref ref;
+  final Ref ref;
+  final Dio dio;
+  final BuildContext context;
 
-  AuthInterceptor(this.ref);
+  AuthInterceptor(this.ref, this.dio, this.context);
 
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    if (options.path != AppRoute.login && options.path != AppRoute.signup) {
-      final token = ref.watch(setAccessTokenStateProvider);
+    if (options.path != AppRoute.login &&
+        options.path != AppRoute.signup &&
+        options.path != AppRoute.refreshToken) {
+      final token = ref.read(setAccessTokenStateProvider);
       if (token != null && token.isNotEmpty) {
         options.headers['Authorization'] = 'Bearer $token';
       }
@@ -27,32 +31,54 @@ class AuthInterceptor extends Interceptor {
   }
 
   @override
-  void onError(DioError err, ErrorInterceptorHandler handler) async {
-    if (err.response?.statusCode == 403 &&
+  void onError(DioException err, ErrorInterceptorHandler handler) async {
+    if (err.response?.data["status"] == 403 &&
         err.response?.data['message'] == 'Token expired') {
-      final token = await _refreshToken();
-      if (token != null) {
+      final refreshToken = ref.read(setRefreshTokenStateProvider);
+      final newAccessToken = await _handleRefreshToken(refreshToken);
+
+      if (newAccessToken != null) {
         final options = err.response!.requestOptions;
-        options.headers['Authorization'] = 'Bearer $token';
-        final response = await ref.watch(dioProvider).fetch(options);
-        handler.resolve(response);
+        options.headers['Authorization'] = 'Bearer $newAccessToken';
+        final cloneReq = await dio.fetch(options);
+        handler.resolve(cloneReq);
       } else {
         handler.next(err);
       }
+    } else if (err.response?.data["status"] == 403 &&
+        err.response?.data['message'] == 'Refresh token has been expired') {
+      showAlertDialog(
+          context: context,
+          title: 'Session Expired',
+          content: 'Your session has expired. Please log in again.',
+          okFunc: () => {
+                ref
+                    .read(userNotifierProvider.notifier)
+                    .logout()
+                    .then((value) => {
+                          if (value)
+                            {
+                              Navigator.of(context).pushNamedAndRemoveUntil(
+                                  AppRoute.login, (route) => false)
+                            }
+                        })
+              });
     } else {
       handler.next(err);
     }
   }
 
-  Future<String?> _refreshToken() async {
-    final refreshToken = ref.watch(setRefreshTokenStateProvider);
+  Future<String?> _handleRefreshToken(String? refreshToken) async {
+    if (refreshToken == null) return null;
+
     try {
-      final response =
-          await ref.watch(userRepositoryProvider).refreshToken(refreshToken!);
-      final newToken = response.accessToken;
-      ref.read(setAccessTokenStateProvider.notifier).state = newToken;
-      ref.read(setAccessTokenProvider(newToken));
-      return newToken;
+      final response = await ref
+          .read(userNotifierProvider.notifier)
+          .refreshToken(refreshToken: refreshToken);
+      return response.fold(
+        (l) => null,
+        (r) => ref.read(setAccessTokenStateProvider.notifier).state,
+      );
     } catch (e) {
       return null;
     }
@@ -60,16 +86,16 @@ class AuthInterceptor extends Interceptor {
 }
 
 final dioProvider = Provider<Dio>((ref) {
+  final context = ref.watch(navigationContextProvider);
   final dio = Dio(
     BaseOptions(
-      baseUrl: 'http://172.20.80.78:8000/api/v1/user',
+      baseUrl: 'http://172.20.80.20:8000/api/v1/user',
       responseType: ResponseType.json,
       sendTimeout: const Duration(seconds: 10),
       connectTimeout: const Duration(seconds: 10),
-      receiveTimeout: const Duration(seconds: 10)
+      receiveTimeout: const Duration(seconds: 10),
     ),
-    
   );
-  dio.interceptors.add(AuthInterceptor(ref));
+  dio.interceptors.add(AuthInterceptor(ref, dio, context));
   return dio;
 });

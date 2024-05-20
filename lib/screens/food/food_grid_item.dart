@@ -17,7 +17,7 @@ class FoodGridItem extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return InkWell(
-      onTap: () => {Get.to(FoodDetailScreen(foodId: food.id))},
+     onTap: () => Get.to(() => FoodDetailScreen(foodId: food.id)),
       child: CustomCard(
         radius: 10,
         child: Column(

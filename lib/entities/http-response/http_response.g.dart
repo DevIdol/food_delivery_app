@@ -1,19 +1,20 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'error_model.dart';
+part of 'http_response.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$ErrorModelImpl _$$ErrorModelImplFromJson(Map<String, dynamic> json) =>
-    _$ErrorModelImpl(
+_$HTTPResponseImpl _$$HTTPResponseImplFromJson(Map<String, dynamic> json) =>
+    _$HTTPResponseImpl(
       status: (json['status'] as num).toInt(),
       name: json['name'] as String,
       message: json['message'] as String,
+      accessToken: json['accessToken'] as String?,
     );
 
-Map<String, dynamic> _$$ErrorModelImplToJson(_$ErrorModelImpl instance) =>
+Map<String, dynamic> _$$HTTPResponseImplToJson(_$HTTPResponseImpl instance) =>
     <String, dynamic>{
       'status': instance.status,
       'name': instance.name,

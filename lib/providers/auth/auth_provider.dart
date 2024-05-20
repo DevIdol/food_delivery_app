@@ -44,6 +44,14 @@ final setAccessTokenProvider =
   prefs.setString(ACCESS_TOKEN, accessToken);
 });
 
+// To set refresh token
+final setRefreshTokenProvider =
+    StateProvider.family<void, String>((ref, refreshToken) async {
+  final prefs = await ref.watch(sharedPrefProvider);
+  ref.watch(setAuthStateProvider);
+  prefs.setString(REFRESH_TOKEN, refreshToken);
+});
+
 // To set the auth user data
 final setAuthenticatedUserProvider = StateProvider.family<void, UserModel>(
   (ref, userData) async {
@@ -70,6 +78,14 @@ final getAccessTokenProvider = FutureProvider<String>(
   (ref) async {
     final prefs = await ref.watch(sharedPrefProvider);
     return prefs.getString(ACCESS_TOKEN) ?? '';
+  },
+);
+
+// To get refresh token from storage
+final getRefreshTokenProvider = FutureProvider<String>(
+  (ref) async {
+    final prefs = await ref.watch(sharedPrefProvider);
+    return prefs.getString(REFRESH_TOKEN) ?? '';
   },
 );
 
