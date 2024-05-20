@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:food_app/utils/constants/app_colors.dart';
 import 'package:food_app/widgets/grid_view.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -12,14 +13,14 @@ class FoodListScreen extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final token = ref.watch(setAccessTokenStateProvider);
     final foodListState = ref.watch(foodListProvider);
+    final foodListNotifier = ref.read(foodListProvider.notifier);
 
     useEffect(() {
       if (token != null && token.isNotEmpty) {
         Future.microtask(() {
-          ref.read(foodListProvider.notifier).fetchFoodList(token);
+          foodListNotifier.fetchFoodList(token);
         });
       }
-
       return null;
     }, [token]);
 
@@ -37,7 +38,7 @@ class FoodListScreen extends HookConsumerWidget {
 
     Future<void> handleRefresh() async {
       if (token != null && token.isNotEmpty) {
-        await ref.read(foodListProvider.notifier).fetchFoodList(token);
+        await foodListNotifier.fetchFoodList(token);
       }
     }
 
@@ -56,12 +57,71 @@ class FoodListScreen extends HookConsumerWidget {
         ),
       );
     } else {
-      return RefreshIndicator(
-        onRefresh: handleRefresh,
-        child: CustomListGridView(
-          isLoading: foodListState.isLoading,
-          items: foodListState.foodList,
-          itemBuilder: (context, food) => FoodGridItem(food: food),
+      return Scaffold(
+        appBar: AppBar(
+          title: TextField(
+            onChanged: (query) {
+              foodListNotifier.updateSearchQuery(query);
+            },
+            decoration: InputDecoration(
+              hintText: 'Search...',
+              hintStyle: const TextStyle(color: AppColor.primaryColor),
+              border: InputBorder.none,
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(
+                  color: AppColor.darkColor,
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(
+                  color: AppColor.primaryColor,
+                  width: 1.4,
+                ),
+              ),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+            ),
+            style: const TextStyle(color: AppColor.darkColor),
+          ),
+          actions: [
+            PopupMenuButton<String>(
+              icon: const Icon(Icons.filter_list, size: 34),
+              onSelected: (category) {
+                foodListNotifier.updateSelectedCategory(category);
+              },
+              itemBuilder: (context) => <PopupMenuEntry<String>>[
+                const PopupMenuItem<String>(
+                  value: '',
+                  child: Text('All'),
+                ),
+                const PopupMenuItem<String>(
+                  value: 'Burgers',
+                  child: Text('Burgers'),
+                ),
+                const PopupMenuItem<String>(
+                  value: 'Pasta',
+                  child: Text('Pasta'),
+                ),
+                const PopupMenuItem<String>(
+                  value: 'Main Course',
+                  child: Text('Main Course'),
+                ),
+                const PopupMenuItem<String>(
+                  value: 'Italian',
+                  child: Text('Italian'),
+                ),
+              ],
+            ),
+          ],
+        ),
+        body: RefreshIndicator(
+          onRefresh: handleRefresh,
+          child: CustomListGridView(
+            isLoading: foodListState.isLoading,
+            items: foodListNotifier.filteredFoodList,
+            itemBuilder: (context, food) => FoodGridItem(food: food),
+          ),
         ),
       );
     }

@@ -9,5 +9,8 @@ class FoodListState with _$FoodListState {
     @Default(true) bool isLoading,
     @Default(<FoodModel>[]) List<FoodModel> foodList,
     @Default('') String error,
+    @Default('') String searchQuery,
+    @Default('') String selectedFoodType,
+    @Default('') String selectedCategory,
   }) = _FoodListState;
 }

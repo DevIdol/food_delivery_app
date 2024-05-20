@@ -12,20 +12,27 @@ class MyApp extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final accessTokenFuture = ref.watch(getAccessTokenProvider.future);
+    final accessTokenFuture =
+        useMemoized(() => ref.read(getAccessTokenProvider.future), []);
+    final refreshTokenFuture =
+        useMemoized(() => ref.read(getRefreshTokenProvider.future), []);
     final isAuthenticatedAsync = ref.watch(getIsAuthenticatedProvider);
 
     useEffect(() {
       Future.microtask(() async {
-        final token = await accessTokenFuture;
-        if (token.isNotEmpty) {
-          ref.read(setAccessTokenStateProvider.notifier).state = token;
+        final accessToken = await accessTokenFuture;
+        final refreshToken = await refreshTokenFuture;
+
+        if (accessToken.isNotEmpty && refreshToken.isNotEmpty) {
+          ref.read(setAccessTokenStateProvider.notifier).state = accessToken;
+          ref.read(setRefreshTokenStateProvider.notifier).state = refreshToken;
         }
       });
       return null;
-    }, [accessTokenFuture]);
+    }, [accessTokenFuture, refreshTokenFuture]);
 
     return GetMaterialApp(
+      navigatorKey: navigatorKey,
       title: 'Food App',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: AppColor.primaryColor),
