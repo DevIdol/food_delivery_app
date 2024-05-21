@@ -4,6 +4,7 @@ import 'package:food_app/widgets/grid_view.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import '../../providers/providers.dart';
+import '../../widgets/widgets.dart';
 import 'food_grid_item.dart';
 
 class FoodListScreen extends HookConsumerWidget {
@@ -26,11 +27,8 @@ class FoodListScreen extends HookConsumerWidget {
 
     useEffect(() {
       if (foodListState.error.isNotEmpty && foodListState.foodList.isNotEmpty) {
-        final snackBar = SnackBar(
-          content: Text(foodListState.error),
-        );
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          showSnackBar(context, foodListState.error);
         });
       }
       return null;
