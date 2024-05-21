@@ -10,7 +10,7 @@ class FoodDetailScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final foodListState = ref.watch(foodListProvider);
+    final foodListState = ref.watch(foodListNotifierProvider);
 
     final food = foodListState.foodList.firstWhere(
       (food) => food.id == foodId,

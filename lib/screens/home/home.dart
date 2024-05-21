@@ -27,7 +27,9 @@ class HomeScreen extends HookConsumerWidget {
           currentIndex: index,
           iconSize: 30,
           onTap: (value) {
-            ref.read(navigationNoifierProvider.notifier).setSelectedIndex(value);
+            ref
+                .read(navigationNoifierProvider.notifier)
+                .setSelectedIndex(value);
           },
           items: const [
             BottomNavigationBarItem(
@@ -71,10 +73,13 @@ class HomeScreen extends HookConsumerWidget {
           ),
         ],
       ),
-      body: [
-        const FoodListScreen(),
-        const ContactScreen(),
-      ][index],
+      body: IndexedStack(
+        index: index,
+        children: const [
+          FoodListScreen(),
+          ContactScreen(),
+        ],
+      ),
     );
   }
 }
