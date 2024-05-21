@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:food_app/utils/constants/app_colors.dart';
-import 'package:food_app/widgets/grid_view.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import '../../providers/providers.dart';
