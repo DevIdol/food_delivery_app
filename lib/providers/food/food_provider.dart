@@ -1,21 +1,24 @@
-import 'package:riverpod/riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../entities/entities.dart';
 import '../../repositories/repositories.dart';
 import 'food_state.dart';
 
-final foodListProvider =
-    StateNotifierProvider.autoDispose<FoodListProvider, FoodListState>((ref) {
-  final foodRepo = ref.watch(foodRepositoryProvider);
-  return FoodListProvider(foodRepo);
-});
+part 'food_provider.g.dart';
 
-class FoodListProvider extends StateNotifier<FoodListState> {
-  FoodListProvider(this._foodRepository) : super(const FoodListState());
+@riverpod
+class FoodListNotifier extends _$FoodListNotifier {
+  late final BaseFoodRepository _foodRepository;
 
-  final BaseFoodRepository _foodRepository;
+  @override
+  FoodListState build() {
+    _foodRepository = ref.watch(foodRepositoryProvider);
+    return const FoodListState();
+  }
 
   Future<void> fetchFoodList(String token) async {
-    state = state.copyWith(isLoading: true);
+    if (state.foodList.isEmpty) {
+      state = state.copyWith(isLoading: true);
+    }
     try {
       final response = await _foodRepository.getFoods();
       state = state.copyWith(

@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:food_app/utils/constants/app_routes.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../entities/entities.dart';
-import '../../interceptor/auth_interceptor.dart';
+import '../../providers/providers.dart';
 
 abstract class BaseFoodRepository {
   Future<FoodResponse> getFoods();
