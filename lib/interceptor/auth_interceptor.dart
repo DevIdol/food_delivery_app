@@ -84,18 +84,3 @@ class AuthInterceptor extends Interceptor {
     }
   }
 }
-
-final dioProvider = Provider<Dio>((ref) {
-  final context = ref.watch(navigationContextProvider);
-  final dio = Dio(
-    BaseOptions(
-      baseUrl: 'http://172.20.80.20:8000/api/v1/user',
-      responseType: ResponseType.json,
-      sendTimeout: const Duration(seconds: 10),
-      connectTimeout: const Duration(seconds: 10),
-      receiveTimeout: const Duration(seconds: 10),
-    ),
-  );
-  dio.interceptors.add(AuthInterceptor(ref, dio, context));
-  return dio;
-});

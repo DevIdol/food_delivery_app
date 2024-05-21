@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../entities/entities.dart';
-import '../../interceptor/auth_interceptor.dart';
+import '../../providers/providers.dart';
 import '../../utils/utils.dart';
 
 abstract class UserRepository {

@@ -4,6 +4,7 @@ import 'package:food_app/widgets/grid_view.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import '../../providers/providers.dart';
+import '../../widgets/widgets.dart';
 import 'food_grid_item.dart';
 
 class FoodListScreen extends HookConsumerWidget {
@@ -12,25 +13,22 @@ class FoodListScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final token = ref.watch(setAccessTokenStateProvider);
-    final foodListState = ref.watch(foodListProvider);
-    final foodListNotifier = ref.read(foodListProvider.notifier);
+    final foodListState = ref.watch(foodListNotifierProvider);
+    final foodListNotifier = ref.read(foodListNotifierProvider.notifier);
 
     useEffect(() {
-      if (token != null && token.isNotEmpty) {
+      if (token != null && token.isNotEmpty && foodListState.foodList.isEmpty) {
         Future.microtask(() {
           foodListNotifier.fetchFoodList(token);
         });
       }
       return null;
-    }, [token]);
+    }, [token, foodListState.foodList.isEmpty]);
 
     useEffect(() {
       if (foodListState.error.isNotEmpty && foodListState.foodList.isNotEmpty) {
-        final snackBar = SnackBar(
-          content: Text(foodListState.error),
-        );
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          showSnackBar(context, foodListState.error);
         });
       }
       return null;

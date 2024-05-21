@@ -1,19 +1,21 @@
 import 'package:dartz/dartz.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../entities/entities.dart';
 import '../../repositories/repositories.dart';
 import '../providers.dart';
 
-class UserProvider extends StateNotifier<AsyncValue<dynamic>> {
-  Ref ref;
+part 'user_provider.g.dart';
 
-  UserProvider({
-    required this.ref,
-  }) : super(const AsyncData(null));
+@riverpod
+class UserNotifier extends _$UserNotifier {
+  @override
+  AsyncValue<dynamic> build() => const AsyncData(null);
 
-  //login
-  Future<Either<String, bool>> login(
-      {required String email, required String password}) async {
+  // Login
+  Future<Either<String, bool>> login({
+    required String email,
+    required String password,
+  }) async {
     state = const AsyncLoading();
 
     UserRequest userReq = UserRequest(email: email, password: password);
@@ -38,22 +40,24 @@ class UserProvider extends StateNotifier<AsyncValue<dynamic>> {
   }
 
   // Register
-  Future<Either<String, bool>> signup(
-      {required String firstName,
-      required String lastName,
-      required String email,
-      required String phone,
-      required String password,
-      required String address}) async {
+  Future<Either<String, bool>> signup({
+    required String firstName,
+    required String lastName,
+    required String email,
+    required String phone,
+    required String password,
+    required String address,
+  }) async {
     state = const AsyncLoading();
 
     UserRegisterRequest userReq = UserRegisterRequest(
-        firstName: firstName,
-        lastName: lastName,
-        email: email,
-        phone: phone,
-        password: password,
-        address: address);
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      phone: phone,
+      password: password,
+      address: address,
+    );
 
     try {
       final response = await ref.read(userRepositoryProvider).signup(userReq);
@@ -71,8 +75,9 @@ class UserProvider extends StateNotifier<AsyncValue<dynamic>> {
   }
 
   // Refresh Token
-  Future<Either<String, bool>> refreshToken(
-      {required String refreshToken}) async {
+  Future<Either<String, bool>> refreshToken({
+    required String refreshToken,
+  }) async {
     state = const AsyncLoading();
     try {
       final response =
@@ -89,13 +94,16 @@ class UserProvider extends StateNotifier<AsyncValue<dynamic>> {
   }
 
   // Verify OTP
-  Future<Either<String, UserRegisterRequest>> veriyOTP({otp, token}) async {
+  Future<Either<String, UserRegisterRequest>> veriyOTP({
+    required String otp,
+    required String token,
+  }) async {
     state = const AsyncLoading();
     OTPRequest otpReq = OTPRequest(otp: int.parse(otp), token: token);
     try {
       await ref.read(userRepositoryProvider).verifyOTP(otpReq);
       UserRegisterRequest registerInfo =
-          ref.watch(setUserRegisterStateProvider) as UserRegisterRequest;
+          ref.read(setUserRegisterStateProvider) as UserRegisterRequest;
       ref.read(resetStorage);
       return Right(registerInfo);
     } on HTTPResponse catch (error) {
@@ -105,7 +113,7 @@ class UserProvider extends StateNotifier<AsyncValue<dynamic>> {
     }
   }
 
-  // logout
+  // Logout
   Future<bool> logout() async {
     ref.read(resetStorage);
 
@@ -128,8 +136,3 @@ class UserProvider extends StateNotifier<AsyncValue<dynamic>> {
     }
   }
 }
-
-final userNotifierProvider =
-    StateNotifierProvider<UserProvider, AsyncValue<dynamic>>((ref) {
-  return UserProvider(ref: ref);
-});

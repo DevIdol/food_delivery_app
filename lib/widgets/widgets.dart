@@ -7,3 +7,4 @@ export 'loading_overlay.dart';
 export 'custom_widget.dart';
 export 'page_transition.dart';
 export 'skeleton_grid.dart';
+export 'grid_view.dart';

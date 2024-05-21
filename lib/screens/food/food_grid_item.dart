@@ -19,6 +19,7 @@ class FoodGridItem extends StatelessWidget {
     return InkWell(
      onTap: () => Get.to(() => FoodDetailScreen(foodId: food.id)),
       child: CustomCard(
+        color: AppColor.lightColor,
         radius: 10,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

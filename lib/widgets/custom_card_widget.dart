@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:food_app/utils/utils.dart';
 
 class CustomCard extends StatelessWidget {
   final double? width;
@@ -10,7 +11,7 @@ class CustomCard extends StatelessWidget {
   const CustomCard({
     super.key,
     this.width,
-    this.color,
+    this.color = AppColor.cardColor,
     this.padding,
     this.radius = 15,
     required this.child,

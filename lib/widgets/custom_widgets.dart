@@ -97,3 +97,67 @@ Future<void> showConfirmDialog(
     },
   );
 }
+
+void showSnackBar(BuildContext context, String msg) {
+  final Widget toastWithButton = Container(
+    padding: const EdgeInsets.only(left: 19),
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(20),
+      color: AppColor.darkColor,
+    ),
+    child: Row(
+      children: [
+        Expanded(
+          child: Text(
+            msg,
+            softWrap: true,
+            style: commonStyle(
+              context: context,
+              size: 0.03,
+              fontWeight: FontWeight.w500,
+              color: AppColor.lightColor,
+            ),
+          ),
+        ),
+        const ColoredBox(
+          color: AppColor.darkColor,
+          child: SizedBox(
+            width: 1,
+            height: 23,
+          ),
+        ),
+        IconButton(
+          icon: const Icon(
+            Icons.close,
+            size: 20,
+          ),
+          color: AppColor.errorColor,
+          onPressed: () {
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          },
+        ),
+      ],
+    ),
+  );
+  final snackBar = SnackBar(
+    content: toastWithButton,
+    backgroundColor: Colors.transparent,
+    behavior: SnackBarBehavior.floating,
+    margin: EdgeInsets.zero,
+    elevation: 0,
+    duration: const Duration(milliseconds: 5000),
+  );
+  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+}
+
+TextStyle commonStyle(
+    {required BuildContext context,
+    double size = 0.035,
+    FontWeight fontWeight = FontWeight.w400,
+    Color? color}) {
+  return TextStyle(
+    fontSize: displayWidth(context) * size,
+    fontWeight: fontWeight,
+    color: color,
+  );
+}
